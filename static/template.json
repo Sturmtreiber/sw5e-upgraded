@@ -479,10 +479,46 @@
       "templates": ["common"],
       "attributes": {
         "ac": {
+          "flat": null,
+          "formula": "",
           "calc": "starship"
+        },
+        "init": {
+          "ability": "",
+          "bonus": ""
+        },
+        "movement": {
+          "burrow": null,
+          "climb": null,
+          "crawl": null,
+          "fly": null,
+          "roll": null,
+          "space": null,
+          "swim": null,
+          "turn": null,
+          "walk": null,
+          "units": null,
+          "hover": false
+        },
+        "bonuses": {
+          "mwak": {
+            "attack": "",
+            "damage": ""
+          },
+          "rwak": {
+            "attack": "",
+            "damage": ""
+          },
+          "abilities": {
+            "check": "",
+            "save": "",
+            "skill": ""
+          }
         },
         "hp": {
           "value": 0,
+          "max": null,
+          "temp": 0,
           "tempmax": null,
           "bonuses": {
             "level": "",
@@ -660,13 +696,32 @@
         }
       },
       "traits": {
-        "sdi": {
+        "ci": {
+          "value": [],
+          "custom": ""
+        },
+        "dr": {
+          "value": ["ion", "lightning", "necrotic"],
+          "bypasses": [],
+          "custom": ""
+        },
+        "dv": {
           "value": [],
           "bypasses": [],
           "custom": ""
         },
+        "di": {
+          "value": ["poison", "psychic"],
+          "bypasses": [],
+          "custom": ""
+        },
+        "sdi": {
+          "value": ["poison", "psychic"],
+          "bypasses": [],
+          "custom": ""
+        },
         "sdr": {
-          "value": [],
+          "value": ["acid", "cold", "fire", "necrotic"],
           "bypasses": [],
           "custom": ""
         },
@@ -696,22 +751,44 @@
       },
       "attributes": {
         "ac": {
+          "flat": null,
           "calc": "flat",
+          "formula": "",
           "motionless": ""
+        },
+        "init": {
+          "ability": "",
+          "bonus": ""
+        },
+        "movement": {
+          "burrow": null,
+          "climb": null,
+          "crawl": null,
+          "fly": null,
+          "roll": null,
+          "space": null,
+          "swim": null,
+          "turn": null,
+          "walk": null,
+          "units": null,
+          "hover": false
         },
         "actions": {
           "stations": false,
           "value": 0,
           "thresholds": {
-            "2": null,
-            "1": null,
-            "0": null
+            "2": 0,
+            "1": 0,
+            "0": 0
           }
         },
         "hp": {
           "value": null,
-          "dt": null,
-          "mt": null
+          "max": null,
+          "temp": 0,
+          "tempmax": 0,
+          "dt": 0,
+          "mt": 0
         },
         "capacity": {
           "creature": "",
@@ -725,7 +802,19 @@
         "size": "lg",
         "dimensions": "",
         "di": {
-          "value": ["poison", "psychic"]
+          "value": ["poison", "psychic"],
+          "bypasses": [],
+          "custom": ""
+        },
+        "dr": {
+          "value": [],
+          "bypasses": [],
+          "custom": ""
+        },
+        "dv": {
+          "value": [],
+          "bypasses": [],
+          "custom": ""
         },
         "ci": {
           "value": [
@@ -738,7 +827,8 @@
             "poisoned",
             "stunned",
             "unconscious"
-          ]
+          ],
+          "custom": ""
         }
       },
       "cargo": {
@@ -866,13 +956,11 @@
         "source": {}
       },
       "speciesDescription": {
-        "data": "$characteristics-table",
         "description": {
           "value": "",
           "chat": "",
           "unidentified": ""
         },
-        "traits": "",
         "source": {}
       },
       "physicalItem": {
@@ -882,11 +970,12 @@
           "value": 0,
           "denomination": "gc"
         },
-        "attunement": 0,
-        "equipped": false,
         "rarity": "",
-        "identified": true,
-        "isCargo": false
+        "identified": true
+      },
+      "equippableItem": {
+        "attunement": 0,
+        "equipped": false
       },
       "activatedEffect": {
         "activation": {
@@ -1010,14 +1099,13 @@
     },
     "background": {
       "templates": ["backgroundDescription"],
-      "identifier": "",
       "advancement": []
     },
     "backpack": {
-      "templates": ["itemDescription", "physicalItem"],
+      "templates": ["itemDescription", "physicalItem", "equippableItem"],
       "capacity": {
         "type": "weight",
-        "value": null,
+        "value": 0,
         "weightless": false
       },
       "currency": {
@@ -1046,7 +1134,9 @@
       "templates": ["deploymentDescription"],
       "identifier": "",
       "rank": 1,
-      "flavorText": "",
+      "flavorText": {
+        "value": ""
+      },
       "advancement": [],
       "source": {}
     },
@@ -1056,7 +1146,7 @@
     "lightsaberform": {},
     "venture": {},
     "consumable": {
-      "templates": ["itemDescription", "physicalItem", "activatedEffect", "action"],
+      "templates": ["itemDescription", "physicalItem", "equippableItem", "activatedEffect", "action"],
       "consumableType": "potion",
       "ammoType": null,
       "uses": {
@@ -1068,6 +1158,7 @@
       "templates": [
         "itemDescription",
         "physicalItem",
+        "equippableItem",
         "activatedEffect",
         "action",
         "mountable",
@@ -1076,15 +1167,15 @@
       ],
       "armor": {
         "type": "light",
-        "value": null,
-        "dex": null
+        "value": 0,
+        "dex": 0
       },
       "baseItem": "",
       "speed": {
-        "value": null,
+        "value": 0,
         "conditions": ""
       },
-      "strength": null,
+      "strength": 0,
       "stealth": false,
       "properties": {},
       "proficient": null
@@ -1097,29 +1188,102 @@
       },
       "requirements": "",
       "recharge": {
-        "value": null,
+        "value": 1,
         "charged": false
       },
       "attributes": {
         "speed": {
-          "space": null,
-          "turn": null
+          "space": 300,
+          "turn": 250
         }
       }
     },
     "loot": {
-      "templates": ["itemDescription", "physicalItem"]
+      "templates": ["itemDescription", "physicalItem"],
+      "type": {
+        "value": "",
+        "subtype": ""
+      }
     },
     "species": {
       "templates": ["speciesDescription"],
       "identifier": "",
       "advancement": [],
+      "movement": {
+        "burrow": null,
+        "climb": null,
+        "crawl": null,
+        "fly": null,
+        "roll": null,
+        "space": null,
+        "swim": null,
+        "turn": null,
+        "walk": null,
+        "units": null,
+        "hover": false
+      },
+      "senses": {
+        "darkvision": null,
+        "blindsight": null,
+        "tremorsense": null,
+        "truesight": null,
+        "units": null,
+        "special": ""
+      },
+      "type": {
+        "value": "humanoid",
+        "subtype": "",
+        "swarm": "",
+        "custom": ""
+      },
       "details": {
         "isDroid": false
+      },
+      "skinColorOptions": {
+        "value": ""
+      },
+      "hairColorOptions": {
+        "value": ""
+      },
+      "eyeColorOptions": {
+        "value": ""
+      },
+      "distinctions": {
+        "value": ""
+      },
+      "colorScheme": {
+        "value": ""
+      },
+      "droidDistinctions": {
+        "value": ""
+      },
+      "heightAverage": {
+        "value": ""
+      },
+      "heightRollMod": {
+        "value": ""
+      },
+      "weightAverage": {
+        "value": ""
+      },
+      "weightRollMod": {
+        "value": ""
+      },
+      "homeworld": {
+        "value": ""
+      },
+      "slanguage": {
+        "value": ""
+      },
+      "manufacturer": {
+        "value": ""
+      },
+      "droidLanguage": {
+        "value": ""
       }
     },
     "tool": {
-      "templates": ["itemDescription", "physicalItem"],
+      "templates": ["itemDescription", "physicalItem", "equippableItem"],
       "toolType": "",
       "baseItem": "",
       "ability": "int",
@@ -1174,6 +1338,7 @@
       "templates": ["itemDescription"],
       "identifier": "",
       "tier": 0,
+      "size": "med",
       "hullDice": "d6",
       "hullDiceStart": 3,
       "hullDiceUsed": 0,
@@ -1205,19 +1370,15 @@
     "starshipaction": {},
     "starshipfeature": {},
     "starshipmod": {
-      "templates": ["itemDescription", "physicalItem", "activatedEffect", "action"],
-      "recharge": {
-        "charged": false,
-        "value": null
-      },
+      "templates": ["itemDescription", "physicalItem", "equippableItem", "activatedEffect", "action"],
       "system": {
         "value": ""
       },
       "grade": {
-        "value": ""
+        "value": 0
       },
       "baseCost": {
-        "value": ""
+        "value": null
       },
       "prerequisites": {
         "value": ""
@@ -1228,7 +1389,7 @@
       }
     },
     "weapon": {
-      "templates": ["itemDescription", "physicalItem", "activatedEffect", "action", "mountable", "moddable"],
+      "templates": ["itemDescription", "physicalItem", "equippableItem", "activatedEffect", "action", "mountable", "moddable"],
       "weaponType": "simpleVW",
       "weaponClass": "",
       "baseItem": "",

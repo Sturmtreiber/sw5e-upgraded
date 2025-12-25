@@ -19,7 +19,7 @@ import Advancement from "../../documents/advancement/advancement.mjs";
  * @param {Actor5e} actor        Actor on which this advancement is being performed.
  * @param {object} [options={}]  Additional application options.
  */
-export default class AdvancementManager extends Application {
+export default class AdvancementManager extends foundry.applications.api.ApplicationV2 {
   constructor(actor, options = {}) {
     super(options);
 
@@ -59,13 +59,16 @@ export default class AdvancementManager extends Application {
   /* -------------------------------------------- */
 
   /** @inheritdoc */
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
+  static get DEFAULT_OPTIONS() {
+    return foundry.utils.mergeObject(super.DEFAULT_OPTIONS ?? super.defaultOptions, {
       classes: ["sw5e", "advancement", "flow"],
       template: "systems/sw5e/templates/advancement/advancement-manager.hbs",
       width: 460,
       height: "auto"
     });
+  }
+  static get defaultOptions() {
+    return this.DEFAULT_OPTIONS;
   }
 
   /* -------------------------------------------- */
@@ -533,7 +536,8 @@ export default class AdvancementManager extends Application {
   /** @inheritdoc */
   async _render(force, options) {
     await super._render(force, options);
-    if (this._state !== Application.RENDER_STATES.RENDERED || !this.step) return;
+    const renderStates = this.constructor.RENDER_STATES ?? Application.RENDER_STATES;
+    if (this._state !== renderStates.RENDERED || !this.step) return;
 
     // Render the step
     this.step.flow._element = null;

@@ -16,7 +16,7 @@
  * @param {string} property                        Dot separated path to the property.
  * @param {object} [options={}]                    Application rendering options.
  */
-export default class PropertyAttribution extends Application {
+export default class PropertyAttribution extends foundry.applications.api.ApplicationV2 {
   constructor(object, attributions, property, options = {}) {
     super(options);
     this.object = object;
@@ -27,14 +27,17 @@ export default class PropertyAttribution extends Application {
   /* -------------------------------------------- */
 
   /** @inheritDoc */
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
+  static get DEFAULT_OPTIONS() {
+    return foundry.utils.mergeObject(super.DEFAULT_OPTIONS ?? super.defaultOptions, {
       id: "property-attribution",
       classes: ["sw5e", "property-attribution"],
       template: "systems/sw5e/templates/apps/property-attribution.hbs",
       width: 320,
       height: "auto"
     });
+  }
+  static get defaultOptions() {
+    return this.DEFAULT_OPTIONS;
   }
 
   /* -------------------------------------------- */

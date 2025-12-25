@@ -7,7 +7,7 @@
  * @param {number} level          Level for which to configure this flow.
  * @param {object} [options={}]   Application rendering options.
  */
-export default class AdvancementFlow extends FormApplication {
+export default class AdvancementFlow extends foundry.applications.api.FormApplicationV2 {
   constructor(item, advancementId, level, options = {}) {
     super({}, options);
 
@@ -41,11 +41,14 @@ export default class AdvancementFlow extends FormApplication {
   /* -------------------------------------------- */
 
   /** @inheritdoc */
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
+  static get DEFAULT_OPTIONS() {
+    return foundry.utils.mergeObject(super.DEFAULT_OPTIONS ?? super.defaultOptions, {
       template: "systems/sw5e/templates/advancement/advancement-flow.hbs",
       popOut: false
     });
+  }
+  static get defaultOptions() {
+    return this.DEFAULT_OPTIONS;
   }
 
   /* -------------------------------------------- */

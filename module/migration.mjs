@@ -501,24 +501,14 @@ export const migrateSceneData = async function(scene, migrationData) {
 
       if (Object.keys(update).length) foundry.utils.mergeObject(t, update);
       if (!game.actors.has(t.actorId)) t.actorId = null;
-      if (!t.actorId || t.actorLink) t.actorData = {};
+      if (!t.actorId || t.actorLink) t.delta = {};
       else if (!t.actorLink) {
-        const actorData = token.delta?.toObject() ?? foundry.utils.deepClone(t.actorData);
+        const actorData = token.delta?.toObject() ?? {};
         actorData.type = token.actor?.type;
         const update = await migrateActorData(actorData, migrationData);
-        if (game.sw5e.isV10) {
-          ["items", "effects"].forEach(embeddedName => {
-            if (!update[embeddedName]?.length) return;
-            const updates = new Map(update[embeddedName].map(u => [u._id, u]));
-            t.actorData[embeddedName].forEach(original => {
-              const update = updates.get(original._id);
-              if (update) foundry.utils.mergeObject(original, update);
-            });
-            delete update[embeddedName];
-          });
-          foundry.utils.mergeObject(t.actorData, update);
-        } else t.delta = update;
+        t.delta = update;
       }
+      delete t.actorData;
       return t;
     })
   );

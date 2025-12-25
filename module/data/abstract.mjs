@@ -17,7 +17,7 @@
  */
 export default class SystemDataModel extends foundry.abstract.DataModel {
   /** @inheritdoc */
-  static _enableV10Validation = true;
+  static _enableValidation = true;
 
   /**
    * System type that this system data model represents (e.g. "character", "npc", "vehicle").
@@ -154,7 +154,7 @@ export default class SystemDataModel extends foundry.abstract.DataModel {
 
   /** @inheritdoc */
   validate(options = {}) {
-    if (this.constructor._enableV10Validation === false) return true;
+    if (this.constructor._enableValidation === false) return true;
     return super.validate(options);
   }
 

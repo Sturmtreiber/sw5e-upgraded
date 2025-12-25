@@ -44,7 +44,7 @@ export default class WeaponData extends SystemDataModel.mixin(
     return this.mergeSchema(super.defineSchema(), {
       weaponType: new foundry.data.fields.StringField({
         required: true,
-        initial: "simpleM",
+        initial: "simpleVW",
         label: "SW5E.ItemWeaponType"
       }),
       weaponClass: new foundry.data.fields.StringField({

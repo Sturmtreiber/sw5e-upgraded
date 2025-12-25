@@ -3,10 +3,10 @@ import Actor5e from "../../documents/actor/actor.mjs";
 /**
  * A specialized form used to select from a checklist of attributes, traits, or properties
  */
-export default class ActorTypeConfig extends DocumentSheet {
+export default class ActorTypeConfig extends foundry.applications.api.DocumentSheetV2 {
   /** @inheritdoc */
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
+  static get DEFAULT_OPTIONS() {
+    return foundry.utils.mergeObject(super.DEFAULT_OPTIONS ?? super.defaultOptions, {
       classes: ["sw5e", "actor-type", "trait-selector"],
       template: "systems/sw5e/templates/apps/actor-type.hbs",
       width: 280,
@@ -18,6 +18,9 @@ export default class ActorTypeConfig extends DocumentSheet {
       sheetConfig: false,
       keyPath: "system.details.type"
     });
+  }
+  static get defaultOptions() {
+    return this.DEFAULT_OPTIONS;
   }
 
   /* -------------------------------------------- */

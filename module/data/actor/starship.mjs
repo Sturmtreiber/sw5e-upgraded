@@ -1,4 +1,5 @@
 import { FormulaField, MappingField, UUIDField, LocalDocumentField } from "../fields.mjs";
+import SourceField from "../shared/source-field.mjs";
 import AttributesFields from "./templates/attributes.mjs";
 import CommonTemplate from "./templates/common.mjs";
 import DetailsFields from "./templates/details.mjs";
@@ -187,6 +188,19 @@ export default class StarshipData extends CommonTemplate {
             })
           }),
           fuel: new foundry.data.fields.SchemaField({
+            fuelCap: new foundry.data.fields.NumberField({
+              required: true,
+              nullable: false,
+              integer: true,
+              min: 0,
+              initial: 0
+            }),
+            cost: new foundry.data.fields.NumberField({
+              required: true,
+              nullable: false,
+              min: 0,
+              initial: 0
+            }),
             value: new foundry.data.fields.NumberField({
               required: true,
               nullable: false,
@@ -263,7 +277,7 @@ export default class StarshipData extends CommonTemplate {
       details: new foundry.data.fields.SchemaField(
         {
           ...DetailsFields.common,
-          source: new foundry.data.fields.StringField({ required: true, label: "SW5E.Source" }),
+          source: new SourceField(),
           starshipsize: new LocalDocumentField(foundry.documents.BaseItem, {
             required: true, fallback: true, label: "SW5E.StarshipSize"
           })

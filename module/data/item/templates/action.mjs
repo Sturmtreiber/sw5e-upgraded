@@ -44,6 +44,7 @@ export default class ActionTemplate extends SystemDataModel {
           required: true,
           integer: true,
           initial: null,
+          nullable: true,
           positive: true,
           label: "SW5E.ItemCritThreshold"
         }),
@@ -67,6 +68,8 @@ export default class ActionTemplate extends SystemDataModel {
             required: true,
             min: 0,
             integer: true,
+            nullable: true,
+            initial: null,
             label: "SW5E.AbbreviationDC"
           }),
           scaling: new foundry.data.fields.StringField({

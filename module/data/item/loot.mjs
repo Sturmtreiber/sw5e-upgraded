@@ -12,8 +12,8 @@ export default class LootData extends SystemDataModel.mixin(ItemDescriptionTempl
   static defineSchema() {
     return this.mergeSchema(super.defineSchema(), {
       type: new foundry.data.fields.SchemaField({
-        value: new foundry.data.fields.StringField({required: true, label: "SW5E.Type"}),
-        subtype: new foundry.data.fields.StringField({required: true, label: "SW5E.Subtype"})
+        value: new foundry.data.fields.StringField({required: true, blank: true, label: "SW5E.Type"}),
+        subtype: new foundry.data.fields.StringField({required: true, blank: true, label: "SW5E.Subtype"})
       }, {label: "SW5E.ItemLootType"})
     });
   }

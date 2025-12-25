@@ -208,7 +208,6 @@ export default class Actor5e extends SystemDocumentMixin(Actor) {
   prepareBaseData() {
     if ( !game.template.Actor.types.includes(this.type) ) return;
     if ( this.type !== "group" ) this._prepareBaseArmorClass();
-    else if ( game.release.generation < 11 ) this.system.prepareBaseData();
 
     // Type-specific preparation
     switch (this.type) {
@@ -4903,14 +4902,8 @@ export default class Actor5e extends SystemDocumentMixin(Actor) {
     if (this.isToken) {
       const tokenData = d.prototypeToken;
       delete d.prototypeToken;
-      let previousActorData;
-      if (game.sw5e.isV10) {
-        tokenData.actorData = d;
-        previousActorData = this.token.toObject().actorData;
-      } else {
-        tokenData.delta = d;
-        previousActorData = this.token.delta.toObject();
-      }
+      tokenData.delta = d;
+      const previousActorData = this.token.delta.toObject();
       foundry.utils.setProperty(tokenData, "flags.sw5e.previousActorData", previousActorData);
       await this.sheet?.close();
       const update = await this.token.update(tokenData);
@@ -5029,8 +5022,7 @@ export default class Actor5e extends SystemDocumentMixin(Actor) {
       const prototypeTokenData = await baseActor.getTokenDocument();
       const actorData = this.token.getFlag("sw5e", "previousActorData");
       const tokenUpdate = this.token.toObject();
-      if (game.sw5e.isV10) tokenUpdate.actorData = actorData ?? {};
-      else {
+      if (actorData) {
         actorData._id = tokenUpdate.delta._id;
         tokenUpdate.delta = actorData;
       }

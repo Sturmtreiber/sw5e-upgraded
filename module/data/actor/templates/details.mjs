@@ -20,6 +20,13 @@ export default class DetailsField {
           public: new foundry.data.fields.HTMLField({ label: "SW5E.BiographyPublic" })
         },
         { label: "SW5E.Biography" }
+      ),
+      description: new foundry.data.fields.SchemaField(
+        {
+          value: new foundry.data.fields.HTMLField({ label: "SW5E.Description" }),
+          public: new foundry.data.fields.HTMLField({ label: "SW5E.DescriptionPublic" })
+        },
+        { label: "SW5E.Description" }
       )
     };
   }
