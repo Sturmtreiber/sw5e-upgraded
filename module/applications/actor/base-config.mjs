@@ -1,9 +1,9 @@
 /**
  * An abstract class containing common functionality between actor sheet configuration apps.
- * @extends {DocumentSheet}
+ * @extends {DocumentSheetV2}
  * @abstract
  */
-export default class BaseConfigSheet extends DocumentSheet {
+export default class BaseConfigSheet extends foundry.applications.api.DocumentSheetV2 {
   /** @inheritdoc */
   activateListeners(html) {
     super.activateListeners(html);

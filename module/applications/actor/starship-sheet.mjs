@@ -414,11 +414,8 @@ export default class ActorSheet5eStarship extends ActorSheet5e {
         item.firingArcTemplate = sw5e.canvas.FiringArcTemplate.fromItem(item);
         item.firingArcTemplate?.drawPreview();
       } catch(err) {
-        Hooks.onError("ActorSheet5eStarship._onMouseOverItem", err, {
-          msg: game.i18n.localize("SW5E.PlaceTemplateError"),
-          log: "error",
-          notify: "error"
-        });
+        console.error("ActorSheet5eStarship._onMouseOverItem", err);
+        ui.notifications?.error(game.i18n.localize("SW5E.PlaceTemplateError"));
       }
     }
   }

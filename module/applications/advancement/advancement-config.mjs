@@ -7,7 +7,7 @@
  * @param {string} [options.dropKeyPath=null]  Path within advancement configuration where dropped items are stored.
  *                                             If populated, will enable default drop & delete behavior.
  */
-export default class AdvancementConfig extends FormApplication {
+export default class AdvancementConfig extends foundry.applications.api.FormApplicationV2 {
   constructor(advancement, options = {}) {
     super(advancement, options);
     this.#advancementId = advancement.id;
@@ -33,8 +33,8 @@ export default class AdvancementConfig extends FormApplication {
   /* -------------------------------------------- */
 
   /** @inheritDoc */
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
+  static get DEFAULT_OPTIONS() {
+    return foundry.utils.mergeObject(super.DEFAULT_OPTIONS ?? super.defaultOptions, {
       classes: ["sw5e", "advancement", "dialog"],
       template: "systems/sw5e/templates/advancement/advancement-config.hbs",
       width: 400,
@@ -43,6 +43,9 @@ export default class AdvancementConfig extends FormApplication {
       closeOnSubmit: false,
       dropKeyPath: null
     });
+  }
+  static get defaultOptions() {
+    return this.DEFAULT_OPTIONS;
   }
 
   /* -------------------------------------------- */

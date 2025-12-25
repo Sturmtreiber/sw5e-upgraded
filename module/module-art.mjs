@@ -33,7 +33,7 @@ export class ModuleArt {
    */
   async registerModuleArt() {
     this.map.clear();
-    for ( const module of game.modules ) {
+    for ( const module of game.modules.values() ) {
       const flags = module.flags?.[module.id];
       const artPath = this.constructor.getModuleArtPath(module);
       if ( !artPath ) continue;
@@ -108,7 +108,7 @@ export class ModuleArt {
 /**
  * A class responsible for allowing GMs to configure art provided by installed modules.
  */
-export class ModuleArtConfig extends FormApplication {
+export class ModuleArtConfig extends foundry.applications.api.FormApplicationV2 {
   /** @inheritdoc */
   constructor(object={}, options={}) {
     object = foundry.utils.mergeObject(game.settings.get("sw5e", "moduleArtConfiguration"), object, {inplace: false});
@@ -118,8 +118,8 @@ export class ModuleArtConfig extends FormApplication {
   /* -------------------------------------------- */
 
   /** @inheritdoc */
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
+  static get DEFAULT_OPTIONS() {
+    return foundry.utils.mergeObject(super.DEFAULT_OPTIONS ?? super.defaultOptions, {
       title: game.i18n.localize("SW5E.ModuleArtConfigL"),
       id: "module-art-config",
       template: "systems/sw5e/templates/apps/module-art-config.hbs",
@@ -128,6 +128,9 @@ export class ModuleArtConfig extends FormApplication {
       height: "auto"
     });
   }
+  static get defaultOptions() {
+    return this.DEFAULT_OPTIONS;
+  }
 
   /* -------------------------------------------- */
 
@@ -135,7 +138,7 @@ export class ModuleArtConfig extends FormApplication {
   getData(options={}) {
     const context = super.getData(options);
     context.config = [];
-    for ( const module of game.modules ) {
+    for ( const module of game.modules.values() ) {
       if ( !ModuleArt.getModuleArtPath(module) ) continue;
       const settings = this.object[module.id] ?? {portraits: true, tokens: true};
       context.config.push({label: module.title, id: module.id, ...settings});

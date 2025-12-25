@@ -1287,11 +1287,8 @@ export default class Item5e extends SystemDocumentMixin(Item) {
       try {
         templates = await sw5e.canvas.AbilityTemplate.fromItem(item)?.drawPreview();
       } catch(err) {
-        Hooks.onError("Item5e#use", err, {
-          msg: game.i18n.localize("SW5E.PlaceTemplateError"),
-          log: "error",
-          notify: "error"
-        });
+        console.error("Item5e#use", err);
+        ui.notifications?.error(game.i18n.localize("SW5E.PlaceTemplateError"));
       }
     }
 
@@ -2303,11 +2300,8 @@ export default class Item5e extends SystemDocumentMixin(Item) {
             templateItemUuid: item.uuid
           })?.drawPreview();
         } catch(err) {
-          Hooks.onError("Item5e._onChatCardAction", err, {
-            msg: game.i18n.localize("SW5E.PlaceTemplateError"),
-            log: "error",
-            notify: "error"
-          });
+          console.error("Item5e._onChatCardAction", err);
+          ui.notifications?.error(game.i18n.localize("SW5E.PlaceTemplateError"));
         }
         break;
       case "abilityCheck":

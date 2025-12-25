@@ -20,6 +20,8 @@ export default class MountableTemplate extends SystemDataModel {
         {
           value: new foundry.data.fields.NumberField({
             required: true,
+            nullable: true,
+            initial: null,
             integer: true,
             min: 0,
             label: "SW5E.ArmorClass"
@@ -31,18 +33,24 @@ export default class MountableTemplate extends SystemDataModel {
         {
           value: new foundry.data.fields.NumberField({
             required: true,
+            nullable: true,
+            initial: null,
             integer: true,
             min: 0,
             label: "SW5E.HitPointsCurrent"
           }),
           max: new foundry.data.fields.NumberField({
             required: true,
+            nullable: true,
+            initial: null,
             integer: true,
             min: 0,
             label: "SW5E.HitPointsMax"
           }),
           dt: new foundry.data.fields.NumberField({
             required: true,
+            nullable: true,
+            initial: null,
             integer: true,
             min: 0,
             label: "SW5E.DamageThreshold"
