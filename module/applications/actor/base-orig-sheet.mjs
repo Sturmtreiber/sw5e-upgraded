@@ -1015,7 +1015,7 @@ export default class ActorSheetOrig5e extends ActorSheetMixin(ActorSheet) {
 
     // Ensure that this item isn't violating the singleton rule
     // TODO: When v10 support is dropped, this will only need to be handled for items with advancement
-    const dataModel = CONFIG.Item[sw5e.isV10 ? "systemDataModels" : "dataModels"][itemData.type];
+    const dataModel = CONFIG.Item.dataModels[itemData.type];
     const singleton = dataModel?.metadata.singleton ?? false;
     if ( singleton && this.actor.itemTypes[itemData.type].length ) {
       ui.notifications.error(game.i18n.format("SW5E.ActorWarningSingleton", {

@@ -4,8 +4,8 @@
   "description": "A comprehensive game system for running games of SW 5th Edition in the Foundry VTT environment.",
   "version": "2.4.1.2.8.0",
   "compatibility": {
-    "minimum": "10.303",
-    "verified": "11"
+    "minimum": "12",
+    "verified": "12"
   },
   "url": "https://github.com/sw5e-foundry/sw5e",
   "manifest": "https://github.com/sw5e-foundry/sw5e/releases/latest/download/system.json",

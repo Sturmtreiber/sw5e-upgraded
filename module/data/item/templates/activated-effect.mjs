@@ -38,7 +38,12 @@ export default class ActivatedEffectTemplate extends SystemDataModel {
       activation: new foundry.data.fields.SchemaField(
         {
           type: new foundry.data.fields.StringField({required: true, blank: true, label: "SW5E.ItemActivationType"}),
-          cost: new foundry.data.fields.NumberField({required: true, label: "SW5E.ItemActivationCost"}),
+          cost: new foundry.data.fields.NumberField({
+            required: true,
+            nullable: true,
+            initial: null,
+            label: "SW5E.ItemActivationCost"
+          }),
           condition: new foundry.data.fields.StringField({required: true, label: "SW5E.ItemActivationCondition"})
         },
         { label: "SW5E.ItemActivation" }
@@ -60,8 +65,20 @@ export default class ActivatedEffectTemplate extends SystemDataModel {
       crewed: new foundry.data.fields.BooleanField({ label: "SW5E.Crewed" }),
       target: new foundry.data.fields.SchemaField(
         {
-          value: new foundry.data.fields.NumberField({ required: true, min: 0, label: "SW5E.TargetValue" }),
-          width: new foundry.data.fields.NumberField({ required: true, min: 0, label: "SW5E.TargetWidth" }),
+          value: new foundry.data.fields.NumberField({
+            required: true,
+            nullable: true,
+            min: 0,
+            initial: null,
+            label: "SW5E.TargetValue"
+          }),
+          width: new foundry.data.fields.NumberField({
+            required: true,
+            nullable: true,
+            min: 0,
+            initial: null,
+            label: "SW5E.TargetWidth"
+          }),
           units: new foundry.data.fields.StringField({ required: true, blank: true, label: "SW5E.TargetUnits" }),
           type: new foundry.data.fields.StringField({ required: true, blank: true, label: "SW5E.TargetType" }),
           prompt: new foundry.data.fields.BooleanField({ initial: true, label: "SW5E.TemplatePrompt" })
@@ -70,8 +87,20 @@ export default class ActivatedEffectTemplate extends SystemDataModel {
       ),
       range: new foundry.data.fields.SchemaField(
         {
-          value: new foundry.data.fields.NumberField({ required: true, min: 0, label: "SW5E.RangeNormal" }),
-          long: new foundry.data.fields.NumberField({ required: true, min: 0, label: "SW5E.RangeLong" }),
+          value: new foundry.data.fields.NumberField({
+            required: true,
+            nullable: true,
+            min: 0,
+            initial: null,
+            label: "SW5E.RangeNormal"
+          }),
+          long: new foundry.data.fields.NumberField({
+            required: true,
+            nullable: true,
+            min: 0,
+            initial: null,
+            label: "SW5E.RangeLong"
+          }),
           units: new foundry.data.fields.StringField({ required: true, blank: true, label: "SW5E.RangeUnits" })
         },
         { label: "SW5E.Range" }
@@ -86,7 +115,13 @@ export default class ActivatedEffectTemplate extends SystemDataModel {
             initial: null,
             label: "SW5E.ConsumeTarget"
           }),
-          amount: new foundry.data.fields.NumberField({ required: true, integer: true, label: "SW5E.ConsumeAmount" }),
+          amount: new foundry.data.fields.NumberField({
+            required: true,
+            nullable: true,
+            integer: true,
+            initial: null,
+            label: "SW5E.ConsumeAmount"
+          }),
           scale: new foundry.data.fields.BooleanField({ label: "SW5E.ConsumeScaling" })
         },
         { label: "SW5E.ConsumeTitle" }
@@ -109,6 +144,8 @@ export default class ActivatedEffectTemplate extends SystemDataModel {
               required: true,
               min: 0,
               integer: true,
+              nullable: true,
+              initial: null,
               label: "SW5E.LimitedUsesAvailable"
             }),
             max: new FormulaField({ required: true, deterministic: true, label: "SW5E.LimitedUsesMax" }),

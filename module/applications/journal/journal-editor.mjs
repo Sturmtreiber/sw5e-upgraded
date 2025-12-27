@@ -5,10 +5,10 @@
  * @param {object} options
  * @param {string} options.textKeyPath  The path to the specific HTML field being edited.
  */
-export default class JournalEditor extends DocumentSheet {
+export default class JournalEditor extends foundry.applications.api.DocumentSheetV2 {
   /** @inheritdoc */
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
+  static get DEFAULT_OPTIONS() {
+    return foundry.utils.mergeObject(super.DEFAULT_OPTIONS ?? super.defaultOptions, {
       classes: ["journal-editor"],
       template: "systems/sw5e/templates/journal/journal-editor.hbs",
       width: 550,
@@ -16,6 +16,9 @@ export default class JournalEditor extends DocumentSheet {
       textKeyPath: null,
       resizable: true
     });
+  }
+  static get defaultOptions() {
+    return this.DEFAULT_OPTIONS;
   }
 
   /* -------------------------------------------- */

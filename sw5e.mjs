@@ -84,13 +84,14 @@ Hooks.once("init", function() {
     else CONFIG.SW5E[spell] = val;
   }
 
-  game.sw5e.isV10 = game.release.generation < 11;
+  // V12+ only.
+  game.sw5e.isV10 = false;
 
   // Register System Settings
   registerSystemSettings();
 
   // Validation strictness.
-  if (game.sw5e.isV10) _determineValidationStrictness();
+  dataModels.SystemDataModel._enableValidation = game.settings.get("sw5e", "strictValidation");
 
   // Configure module art.
   game.sw5e.moduleArt = new ModuleArt();
@@ -112,10 +113,9 @@ Hooks.once("init", function() {
   CONFIG.Dice.rolls.push(dice.AttribDieRoll);
 
   // Hook up system data types
-  const modelType = game.sw5e.isV10 ? "systemDataModels" : "dataModels";
-  CONFIG.Actor[modelType] = dataModels.actor.config;
-  CONFIG.Item[modelType] = dataModels.item.config;
-  CONFIG.JournalEntryPage[modelType] = dataModels.journal.config;
+  CONFIG.Actor.dataModels = dataModels.actor.config;
+  CONFIG.Item.dataModels = dataModels.item.config;
+  CONFIG.JournalEntryPage.dataModels = dataModels.journal.config;
 
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
@@ -204,14 +204,6 @@ Hooks.once("init", function() {
     Babele.get().setSystemTranslationsDir("babele");
   }
 });
-
-/**
- * Determine if this is a 'legacy' world with permissive validation, or one where strict validation is enabled.
- * @internal
- */
-function _determineValidationStrictness() {
-  dataModels.SystemDataModel._enableV10Validation = game.settings.get("sw5e", "strictValidation");
-}
 
 /**
  * Update the world's validation strictness setting based on whether validation errors were encountered.
@@ -359,15 +351,8 @@ Hooks.once("i18nInit", () => utils.performPreLocalization(CONFIG.SW5E));
  * Once the entire VTT framework is initialized, check to see if we should perform a data migration
  */
 Hooks.once("ready", async function() {
-  if (game.sw5e.isV10) {
-    // Configure validation strictness.
-    _configureValidationStrictness();
-
-    // TODO SW5E: Uncomment this once/if we ever add a rules compendium like dnd5e
-    // // Apply custom compendium styles to the SRD rules compendium.
-    // const rules = game.packs.get("sw5e.rules");
-    // rules.apps = [new applications.journal.SRDCompendium(rules)];
-  }
+  // Configure validation strictness.
+  _configureValidationStrictness();
 
   // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
   Hooks.on("hotbarDrop", (bar, data, slot) => {

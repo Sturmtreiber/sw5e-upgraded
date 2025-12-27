@@ -7,8 +7,12 @@ export default class MovementField extends foundry.data.fields.SchemaField {
     fields = {
       burrow: new foundry.data.fields.NumberField({ ...numberConfig, label: "SW5E.MovementBurrow" }),
       climb: new foundry.data.fields.NumberField({ ...numberConfig, label: "SW5E.MovementClimb" }),
+      crawl: new foundry.data.fields.NumberField({ ...numberConfig, label: "SW5E.MovementCrawl" }),
       fly: new foundry.data.fields.NumberField({ ...numberConfig, label: "SW5E.MovementFly" }),
+      roll: new foundry.data.fields.NumberField({ ...numberConfig, label: "SW5E.MovementRoll" }),
+      space: new foundry.data.fields.NumberField({ ...numberConfig, label: "SW5E.MovementSpace" }),
       swim: new foundry.data.fields.NumberField({ ...numberConfig, label: "SW5E.MovementSwim" }),
+      turn: new foundry.data.fields.NumberField({ ...numberConfig, label: "SW5E.MovementTurn" }),
       walk: new foundry.data.fields.NumberField({ ...numberConfig, label: "SW5E.MovementWalk" }),
       units: new foundry.data.fields.StringField({
         required: true, nullable: true, blank: false, initial: null, label: "SW5E.MovementUnits"

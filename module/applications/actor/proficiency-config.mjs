@@ -16,13 +16,16 @@ import * as Trait from "../../documents/actor/trait.mjs";
 export default class ProficiencyConfig extends BaseConfigSheet {
 
   /** @inheritdoc */
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
+  static get DEFAULT_OPTIONS() {
+    return foundry.utils.mergeObject(super.DEFAULT_OPTIONS ?? super.defaultOptions, {
       classes: ["sw5e"],
       template: "systems/sw5e/templates/apps/proficiency-config.hbs",
       width: 500,
       height: "auto"
     });
+  }
+  static get defaultOptions() {
+    return this.DEFAULT_OPTIONS;
   }
 
   /* -------------------------------------------- */

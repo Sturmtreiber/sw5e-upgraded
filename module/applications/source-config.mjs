@@ -1,11 +1,11 @@
 /**
  * Application for configuring the source data on actors and items.
  */
-export default class SourceConfig extends DocumentSheet {
+export default class SourceConfig extends foundry.applications.api.DocumentSheetV2 {
 
   /** @inheritdoc */
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
+  static get DEFAULT_OPTIONS() {
+    return foundry.utils.mergeObject(super.DEFAULT_OPTIONS ?? super.defaultOptions, {
       classes: ["sw5e", "source-config", "dialog"],
       template: "systems/sw5e/templates/apps/source-config.hbs",
       width: 400,
@@ -13,6 +13,9 @@ export default class SourceConfig extends DocumentSheet {
       sheetConfig: false,
       keyPath: "system.details.source"
     });
+  }
+  static get defaultOptions() {
+    return this.DEFAULT_OPTIONS;
   }
 
   /* -------------------------------------------- */

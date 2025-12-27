@@ -72,6 +72,13 @@ export default class ActorSheet5eStarship extends ActorSheet5e {
       else ssDeployment.actionsVisible = !!(ssDeployment.actorsVisible || ssDeployment.value);
     }
 
+    context.deployment = {
+      pilot: { ...ssDeploy.pilot },
+      crew: { ...ssDeploy.crew, items: Array.from(ssDeploy.crew?.items ?? []) },
+      passenger: { ...ssDeploy.passenger, items: Array.from(ssDeploy.passenger?.items ?? []) },
+      active: { ...ssDeploy.active }
+    };
+
     const routing = this.actor.system.attributes.power.routing;
     const symbols = ["↓", "=", "↑"];
     const effects = ["negative", "neutral", "positive"];
@@ -414,11 +421,8 @@ export default class ActorSheet5eStarship extends ActorSheet5e {
         item.firingArcTemplate = sw5e.canvas.FiringArcTemplate.fromItem(item);
         item.firingArcTemplate?.drawPreview();
       } catch(err) {
-        Hooks.onError("ActorSheet5eStarship._onMouseOverItem", err, {
-          msg: game.i18n.localize("SW5E.PlaceTemplateError"),
-          log: "error",
-          notify: "error"
-        });
+        console.error("ActorSheet5eStarship._onMouseOverItem", err);
+        ui.notifications?.error(game.i18n.localize("SW5E.PlaceTemplateError"));
       }
     }
   }

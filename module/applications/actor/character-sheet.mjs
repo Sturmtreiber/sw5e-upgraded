@@ -712,7 +712,9 @@ async function addSubTabs(app, html, data) {
     });
 }
 
-Hooks.on("renderActorSheet5eCharacter", (app, html, data) => {
-  addFavorites(app, html, data);
-  addSubTabs(app, html, data);
+Hooks.once("init", () => {
+  Hooks.on("renderActorSheet5eCharacter", (app, html, data) => {
+    addFavorites(app, html, data);
+    addSubTabs(app, html, data);
+  });
 });

@@ -69,7 +69,7 @@ class PackLoader {
   // }
 }
 
-export default class CompendiumBrowser extends Application {
+export default class CompendiumBrowser extends foundry.applications.api.ApplicationV2 {
   settings;
 
   dataTabsList = [
@@ -112,8 +112,8 @@ export default class CompendiumBrowser extends Application {
   }
 
   /** @inheritdoc */
-  static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+  static get DEFAULT_OPTIONS() {
+    return foundry.utils.mergeObject(super.DEFAULT_OPTIONS ?? super.defaultOptions, {
       id: "compendium-browser",
       classes: [],
       template: "systems/sw5e/templates/apps/compendium-browser/compendium-browser.hbs",
@@ -135,6 +135,9 @@ export default class CompendiumBrowser extends Application {
       ],
       scrollY: [".control-area", ".item-list", ".settings-container"]
     });
+  }
+  static get defaultOptions() {
+    return this.DEFAULT_OPTIONS;
   }
 
   /**
