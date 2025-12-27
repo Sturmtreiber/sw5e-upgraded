@@ -96,7 +96,7 @@ export default class GroupActor extends SystemDataModel.mixin(CurrencyTemplate) 
   async addMember(actor) {
     if (actor.type === "group") throw new Error("You may not add a group within a group.");
     if (actor.pack) throw new Error("You may only add Actors to the group which exist within the World.");
-    const memberIds = this._source.members;
+    const memberIds = Array.from(this._source.members ?? []);
     if (memberIds.includes(actor.id)) return;
     return this.parent.update({
       system: {
@@ -113,7 +113,7 @@ export default class GroupActor extends SystemDataModel.mixin(CurrencyTemplate) 
    * @returns {Promise<Actor5e>}      The updated group Actor
    */
   async removeMember(actor) {
-    const memberIds = foundry.utils.deepClone(this._source.members);
+    const memberIds = Array.from(this._source.members ?? []);
 
     // Handle user input
     let actorId;

@@ -11,7 +11,7 @@
         <li>
             <!-- Deployments (crew, passenger) -->
             {{#each config.ssCrewStationTypes as | name key |}}
-            {{#with (lookup @root.system.attributes.deployment key) as | deployment |}}
+            {{#with (lookup @root.deployment key) as | deployment |}}
             {{#if deployment.actorsVisible}}
                 <div class="group-list-title">
                     <h3 class="item-name">
@@ -29,11 +29,11 @@
                         </div>
                         <div class="item-detail item-weight">
                             {{#if (eq key "crew")}}
-                                {{#if (eq deploy @root.system.attributes.deployment.pilot.value)}}
+                                {{#if (eq deploy @root.deployment.pilot.value)}}
                                     <a class="deploy-control pilot" data-action="pilot-toggle">
                                         {{localize "SW5E.CrewStationTypePilot"}}
                                     </a>
-                                {{else if (not @root.system.attributes.deployment.pilot.value)}}
+                                {{else if (not @root.deployment.pilot.value)}}
                                     <a class="deploy-control" data-action="pilot-toggle">
                                         {{localize "SW5E.DeployAsPilot"}}
                                     </a>
@@ -46,7 +46,7 @@
                                     <a/>
                                 {{else}}
                                     <a class="deploy-control" data-action="toggle" data-tooltip="SW5E.DeployToggle">
-                                        <i class="fas {{#if (eq deploy @root.system.attributes.deployment.active.value)}}fa-check{{else}}fa-times{{/if}}"></i>
+                                        <i class="fas {{#if (eq deploy @root.deployment.active.value)}}fa-check{{else}}fa-times{{/if}}"></i>
                                     </a>
                                 {{/if}}
                                 <a class="deploy-control" data-action="delete" data-tooltip="SW5E.DeployDelete">
@@ -71,7 +71,7 @@
 
             <!-- Deployments actions -->
             {{#each config.ssCrewStationTypes as | name key |}}
-            {{#with (lookup @root.system.attributes.deployment key) as | deployment |}}
+            {{#with (lookup @root.deployment key) as | deployment |}}
             {{#if deployment.actionsVisible}}
                 {{#with (lookup @root.ssactions key) as | actions |}} {{#unless (eq actions.items.length 0)}}
                     {{> "sw5e.swalt-crewactions" actions=actions owner=@root.owner name=name}}

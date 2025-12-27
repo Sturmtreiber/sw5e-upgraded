@@ -72,6 +72,13 @@ export default class ActorSheet5eStarship extends ActorSheet5e {
       else ssDeployment.actionsVisible = !!(ssDeployment.actorsVisible || ssDeployment.value);
     }
 
+    context.deployment = {
+      pilot: { ...ssDeploy.pilot },
+      crew: { ...ssDeploy.crew, items: Array.from(ssDeploy.crew?.items ?? []) },
+      passenger: { ...ssDeploy.passenger, items: Array.from(ssDeploy.passenger?.items ?? []) },
+      active: { ...ssDeploy.active }
+    };
+
     const routing = this.actor.system.attributes.power.routing;
     const symbols = ["↓", "=", "↑"];
     const effects = ["negative", "neutral", "positive"];
