@@ -5,15 +5,16 @@
  */
 export default class BaseConfigSheet extends foundry.applications.api.DocumentSheetV2 {
   /** @inheritdoc */
-  activateListeners(html) {
-    super.activateListeners(html);
-    if (this.isEditable) {
-      for (const override of this._getActorOverrides()) {
-        html.find(`input[name="${override}"],select[name="${override}"]`).each((i, el) => {
-          el.disabled = true;
-          el.dataset.tooltip = "SW5E.ActiveEffectOverrideWarning";
-        });
-      }
+  async _onRender(options) {
+    await super._onRender(options);
+    if (!this.isEditable) return;
+    const element = this.element;
+    if (!element) return;
+    for (const override of this._getActorOverrides()) {
+      element.querySelectorAll(`input[name="${override}"],select[name="${override}"]`).forEach(el => {
+        el.disabled = true;
+        el.dataset.tooltip = "SW5E.ActiveEffectOverrideWarning";
+      });
     }
   }
 

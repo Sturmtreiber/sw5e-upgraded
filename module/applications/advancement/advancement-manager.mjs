@@ -62,14 +62,22 @@ export default class AdvancementManager extends foundry.applications.api.Applica
   static get DEFAULT_OPTIONS() {
     return foundry.utils.mergeObject(super.DEFAULT_OPTIONS ?? super.defaultOptions, {
       classes: ["sw5e", "advancement", "flow"],
-      template: "systems/sw5e/templates/advancement/advancement-manager.hbs",
-      width: 460,
-      height: "auto"
+      position: {
+        width: 460,
+        height: "auto"
+      }
     });
   }
   static get defaultOptions() {
     return this.DEFAULT_OPTIONS;
   }
+
+  /** @inheritdoc */
+  static PARTS = {
+    form: {
+      template: "systems/sw5e/templates/advancement/advancement-manager.hbs"
+    }
+  };
 
   /* -------------------------------------------- */
 
@@ -464,8 +472,9 @@ export default class AdvancementManager extends foundry.applications.api.Applica
   /* -------------------------------------------- */
 
   /** @inheritdoc */
-  getData() {
-    if (!this.step) return {};
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
+    if (!this.step) return context;
 
     // Prepare information for subheading
     const item = this.step.flow.item;
@@ -476,6 +485,7 @@ export default class AdvancementManager extends foundry.applications.api.Applica
     const visibleIndex = visibleSteps.indexOf(this.step);
 
     return {
+      ...context,
       actor: this.clone,
       flowId: this.step.flow.id,
       header: item.name,
@@ -534,43 +544,53 @@ export default class AdvancementManager extends foundry.applications.api.Applica
   /* -------------------------------------------- */
 
   /** @inheritdoc */
-  async _render(force, options) {
-    await super._render(force, options);
-    const renderStates = this.constructor.RENDER_STATES ?? Application.RENDER_STATES;
-    if (this._state !== renderStates.RENDERED || !this.step) return;
-
-    // Render the step
-    this.step.flow._element = null;
-    this.step.flow.options.manager ??= this;
-    await this.step.flow._render(force, options);
-    this.setPosition();
+  _onFirstRender(options) {
+    super._onFirstRender(options);
+    this._actionHandlers = {
+      restart: this._restart.bind(this),
+      previous: this._backward.bind(this),
+      next: this._forward.bind(this),
+      complete: this._forward.bind(this)
+    };
   }
 
   /* -------------------------------------------- */
 
   /** @inheritdoc */
-  activateListeners(html) {
-    super.activateListeners(html);
-    html.find("button[data-action]").click(event => {
-      const buttons = html.find("button");
-      buttons.attr("disabled", true);
-      html.find(".error").removeClass("error");
+  async _onRender(options) {
+    await super._onRender(options);
+    const renderStates = this.constructor.RENDER_STATES ?? Application.RENDER_STATES;
+    if (this._state !== renderStates.RENDERED || !this.step) return;
+
+    this._actionListenerController?.abort();
+    this._actionListenerController = new AbortController();
+    const { signal } = this._actionListenerController;
+    const element = this.element;
+    if (!element) return;
+
+    element.addEventListener("click", event => {
+      const button = event.target.closest("button[data-action]");
+      if (!button) return;
+      const action = button.dataset.action;
+      const handler = this._actionHandlers?.[action];
+      if (!handler) return;
+
+      const buttons = element.querySelectorAll("button");
+      buttons.forEach(btn => { btn.disabled = true; });
+      element.querySelectorAll(".error").forEach(el => el.classList.remove("error"));
       try {
-        switch (event.currentTarget.dataset.action) {
-          case "restart":
-            if (!this.previousStep) return;
-            return this._restart(event);
-          case "previous":
-            if (!this.previousStep) return;
-            return this._backward(event);
-          case "next":
-          case "complete":
-            return this._forward(event);
-        }
+        if ((action === "restart" || action === "previous") && !this.previousStep) return;
+        handler(event);
       } finally {
-        buttons.attr("disabled", false);
+        buttons.forEach(btn => { btn.disabled = false; });
       }
-    });
+    }, { signal });
+
+    // Render the step
+    this.step.flow._element = null;
+    this.step.flow.options.manager ??= this;
+    await this.step.flow._render(true, options);
+    this.setPosition();
   }
 
   /* -------------------------------------------- */
