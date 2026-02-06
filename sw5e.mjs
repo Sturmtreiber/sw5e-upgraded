@@ -352,7 +352,7 @@ Hooks.once("i18nInit", () => utils.performPreLocalization(CONFIG.SW5E));
  */
 Hooks.once("ready", async function() {
   // Configure validation strictness.
-  _configureValidationStrictness();
+  await _configureValidationStrictness();
 
   // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
   Hooks.on("hotbarDrop", (bar, data, slot) => {

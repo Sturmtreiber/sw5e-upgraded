@@ -60,7 +60,8 @@ export default class AdvancementManager extends foundry.applications.api.Applica
 
   /** @inheritdoc */
   static get DEFAULT_OPTIONS() {
-    return foundry.utils.mergeObject(super.DEFAULT_OPTIONS ?? super.defaultOptions, {
+    const baseOptions = super.DEFAULT_OPTIONS ?? super.defaultOptions;
+    return foundry.utils.mergeObject(baseOptions, {
       classes: ["sw5e", "advancement", "flow"],
       position: {
         width: 460,
@@ -502,7 +503,10 @@ export default class AdvancementManager extends foundry.applications.api.Applica
   /* -------------------------------------------- */
 
   /** @inheritdoc */
-  render(...args) {
+  async _preRender(options) {
+    const proceed = await super._preRender(options);
+    if (proceed === false) return false;
+
     if (this.steps.length && this._stepIndex === null) this._stepIndex = 0;
 
     // Ensure the level on the class item matches the specified level
@@ -527,18 +531,18 @@ export default class AdvancementManager extends foundry.applications.api.Applica
      * @memberof hookEvents
      * @param {AdvancementManager} advancementManager The advancement manager about to be rendered
      */
-    const allowed = Hooks.call("sw5e.preAdvancementManagerRender", this);
+    const hookAllowed = Hooks.call("sw5e.preAdvancementManagerRender", this);
 
     // Abort if not allowed
-    if (allowed === false) return this;
+    if (hookAllowed === false) return false;
 
     if (this.step?.automatic) {
-      if (this._advancing) return this;
+      if (this._advancing) return false;
       this._forward();
-      return this;
+      return false;
     }
 
-    return super.render(...args);
+    return true;
   }
 
   /* -------------------------------------------- */
@@ -552,6 +556,18 @@ export default class AdvancementManager extends foundry.applications.api.Applica
       next: this._forward.bind(this),
       complete: this._forward.bind(this)
     };
+    this._onActionHandler ??= this._onAction.bind(this);
+  }
+
+  /* -------------------------------------------- */
+
+  /** @inheritdoc */
+  _attachPartListeners(partId, element) {
+    super._attachPartListeners(partId, element);
+    if (partId !== "form") return;
+    element.querySelectorAll("[data-action]").forEach(el => {
+      el.addEventListener("click", this._onActionHandler);
+    });
   }
 
   /* -------------------------------------------- */
@@ -562,35 +578,38 @@ export default class AdvancementManager extends foundry.applications.api.Applica
     const renderStates = this.constructor.RENDER_STATES ?? Application.RENDER_STATES;
     if (this._state !== renderStates.RENDERED || !this.step) return;
 
-    this._actionListenerController?.abort();
-    this._actionListenerController = new AbortController();
-    const { signal } = this._actionListenerController;
-    const element = this.element;
-    if (!element) return;
-
-    element.addEventListener("click", event => {
-      const button = event.target.closest("button[data-action]");
-      if (!button) return;
-      const action = button.dataset.action;
-      const handler = this._actionHandlers?.[action];
-      if (!handler) return;
-
-      const buttons = element.querySelectorAll("button");
-      buttons.forEach(btn => { btn.disabled = true; });
-      element.querySelectorAll(".error").forEach(el => el.classList.remove("error"));
-      try {
-        if ((action === "restart" || action === "previous") && !this.previousStep) return;
-        handler(event);
-      } finally {
-        buttons.forEach(btn => { btn.disabled = false; });
-      }
-    }, { signal });
-
     // Render the step
     this.step.flow._element = null;
     this.step.flow.options.manager ??= this;
     await this.step.flow._render(true, options);
     this.setPosition();
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Handle data-action clicks from the ApplicationV2 action system.
+   * @param {Event} event
+   * @protected
+   */
+  _onAction(event) {
+    const button = event.target.closest("[data-action]");
+    if (!button) return;
+    const action = button.dataset.action;
+    const handler = this._actionHandlers?.[action];
+    if (!handler) return;
+
+    const element = this.element;
+    if (!element) return;
+    const buttons = element.querySelectorAll("button");
+    buttons.forEach(btn => { btn.disabled = true; });
+    element.querySelectorAll(".error").forEach(el => el.classList.remove("error"));
+    try {
+      if ((action === "restart" || action === "previous") && !this.previousStep) return;
+      handler(event);
+    } finally {
+      buttons.forEach(btn => { btn.disabled = false; });
+    }
   }
 
   /* -------------------------------------------- */
