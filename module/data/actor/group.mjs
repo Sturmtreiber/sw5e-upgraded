@@ -74,7 +74,7 @@ export default class GroupActor extends SystemDataModel.mixin(CurrencyTemplate) 
   /** @inheritdoc */
   prepareBaseData() {
     this.members.clear();
-    for (const id of this._source.members) {
+    for (const id of (this._source.members ?? [])) {
       const a = game.actors.get(id);
       if (a) {
         if (a.type === "group") {
