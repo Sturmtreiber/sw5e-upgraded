@@ -61,5 +61,4 @@ This project is **not affiliated with** SW5E, Disney, Wizards of the Coast, or a
 
 Paste the following URL into **Foundry → Setup → Install System**:
 
-https://raw.githubusercontent.com/Sturmtreiber/sw5e-upgraded/refs/heads/master/static/system.json
-
+https://github.com/Sturmtreiber/sw5e-upgraded/releases/download/latest/system.json
