@@ -120,12 +120,18 @@ export class ModuleArtConfig extends foundry.applications.api.FormApplicationV2 
   /** @inheritdoc */
   static get DEFAULT_OPTIONS() {
     return foundry.utils.mergeObject(super.DEFAULT_OPTIONS ?? super.defaultOptions, {
-      title: game.i18n.localize("SW5E.ModuleArtConfigL"),
       id: "module-art-config",
-      template: "systems/sw5e/templates/apps/module-art-config.hbs",
-      popOut: true,
-      width: 600,
-      height: "auto"
+      classes: ["sw5e", "module-art-config"],
+      position: {
+        width: 600,
+        height: "auto"
+      },
+      window: {
+        title: game.i18n.localize("SW5E.ModuleArtConfigL")
+      },
+      form: {
+        closeOnSubmit: true
+      }
     });
   }
   static get defaultOptions() {
@@ -135,8 +141,17 @@ export class ModuleArtConfig extends foundry.applications.api.FormApplicationV2 
   /* -------------------------------------------- */
 
   /** @inheritdoc */
-  getData(options={}) {
-    const context = super.getData(options);
+  static PARTS = {
+    form: {
+      template: "systems/sw5e/templates/apps/module-art-config.hbs"
+    }
+  };
+
+  /* -------------------------------------------- */
+
+  /** @inheritdoc */
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
     context.config = [];
     for ( const module of game.modules.values() ) {
       if ( !ModuleArt.getModuleArtPath(module) ) continue;
@@ -151,7 +166,7 @@ export class ModuleArtConfig extends foundry.applications.api.FormApplicationV2 
   /* -------------------------------------------- */
 
   /** @inheritdoc */
-  async _updateObject(event, formData) {
+  async _processFormSubmission(formData, options) {
     await game.settings.set("sw5e", "moduleArtConfiguration", foundry.utils.expandObject(formData));
     return SettingsConfig.reloadConfirm({world: true});
   }
