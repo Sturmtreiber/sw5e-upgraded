@@ -73,10 +73,10 @@ export default class ActorSheet5eStarship extends ActorSheet5e {
     }
 
     context.deployment = {
-      pilot: { ...(ssDeploy.pilot ?? {}) },
-      crew: { ...(ssDeploy.crew ?? {}), items: Array.from((ssDeploy.crew ?? {}).items ?? []) },
-      passenger: { ...(ssDeploy.passenger ?? {}), items: Array.from((ssDeploy.passenger ?? {}).items ?? []) },
-      active: { ...(ssDeploy.active ?? {}) }
+      pilot: { ...(ssDeploy?.pilot ?? {}) },
+      crew: { ...(ssDeploy?.crew ?? {}), items: Array.from((ssDeploy?.crew ?? {}).items ?? []) },
+      passenger: { ...(ssDeploy?.passenger ?? {}), items: Array.from((ssDeploy?.passenger ?? {}).items ?? []) },
+      active: { ...(ssDeploy?.active ?? {}) }
     };
 
     const routing = this.actor.system.attributes.power.routing;

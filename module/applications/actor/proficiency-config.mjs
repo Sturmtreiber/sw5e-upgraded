@@ -17,7 +17,8 @@ export default class ProficiencyConfig extends BaseConfigSheet {
 
   /** @inheritdoc */
   static get DEFAULT_OPTIONS() {
-    return foundry.utils.mergeObject(super.DEFAULT_OPTIONS, {
+    const options = super.DEFAULT_OPTIONS;
+    return foundry.utils.mergeObject(options, {
       classes: ["sw5e"],
       template: "systems/sw5e/templates/apps/proficiency-config.hbs",
       width: 500,
