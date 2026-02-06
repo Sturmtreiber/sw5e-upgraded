@@ -506,7 +506,12 @@ export const migrateSceneData = async function(scene, migrationData) {
         const actorData = token.delta?.toObject() ?? {};
         actorData.type = token.actor?.type;
         const update = await migrateActorData(actorData, migrationData);
-        t.delta = update;
+        const mergedActorData = foundry.utils.mergeObject(
+          foundry.utils.deepClone(actorData ?? {}),
+          update ?? {},
+          {inplace: false}
+        );
+        t.delta = mergedActorData;
       }
       delete t.actorData;
       return t;
