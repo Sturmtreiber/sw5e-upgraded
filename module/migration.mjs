@@ -503,13 +503,13 @@ export const migrateSceneData = async function(scene, migrationData) {
       if (!game.actors.has(t.actorId)) t.actorId = null;
       if (!t.actorId || t.actorLink) t.delta = {};
       else if (!t.actorLink) {
-        const actorData = token.delta?.toObject() ?? {};
+        const actorData = token.delta?.toObject?.() ?? token.delta ?? {};
         actorData.type = token.actor?.type;
-        const update = await migrateActorData(actorData, migrationData);
+        const actorUpdate = await migrateActorData(actorData, migrationData);
         const mergedActorData = foundry.utils.mergeObject(
           foundry.utils.deepClone(actorData ?? {}),
-          update ?? {},
-          {inplace: false}
+          actorUpdate ?? {},
+          { inplace: false }
         );
         t.delta = mergedActorData;
       }

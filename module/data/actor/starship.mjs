@@ -57,7 +57,7 @@ import TraitsFields from "./templates/traits.mjs";
  * @property {number} attributes.power.weapons.value           Number of power dice stored in weapons storage.
  * @property {boolean} attributes.used                         Does the ship have the 'used' condition.
  * @property {object} details
- * @property {string} details.source                           What book or adventure is this Starship from.
+ * @property {SourceField} details.source                      What book or adventure is this Starship from.
  * @property {Item5e|string} details.starshipsize              Starships's size item or name.
  * @property {Object<string, SkillData>} skills                Starship's skills.
  * @property {object} traits
@@ -337,8 +337,9 @@ export default class StarshipData extends CommonTemplate {
    * @param {object} source  The candidate source data from which the model will be constructed.
    */
   static #migrateSource(source) {
-    if (source.details?.source && (foundry.utils.getType(source.details.source) !== "Object")) {
-      source.details.source = { custom: source.details.source };
+    const detailsSource = source.details?.source;
+    if (typeof detailsSource === "string") {
+      source.details.source = { custom: detailsSource };
     }
   }
 
