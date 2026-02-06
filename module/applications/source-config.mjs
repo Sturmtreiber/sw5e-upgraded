@@ -30,14 +30,15 @@ export default class SourceConfig extends foundry.applications.api.DocumentSheet
   /* -------------------------------------------- */
 
   /** @inheritdoc */
-  async getData(options) {
-    const context = super.getData(options);
-    context.appId = this.id;
-    context.CONFIG = CONFIG.SW5E;
-    context.source = foundry.utils.getProperty(this.document, this.options.keyPath);
-    context.sourceUuid = foundry.utils.getProperty(this.document, "flags.core.sourceId");
-    context.hasSourceId = !!(await fromUuid(context.sourceUuid));
-    return context;
+  async _prepareContext(context, options) {
+    const preparedContext = await super._prepareContext(context, options);
+    const nextContext = { ...preparedContext };
+    nextContext.appId = this.id;
+    nextContext.CONFIG = CONFIG.SW5E;
+    nextContext.source = foundry.utils.getProperty(this.document, this.options.keyPath);
+    nextContext.sourceUuid = foundry.utils.getProperty(this.document, "flags.core.sourceId");
+    nextContext.hasSourceId = !!(await fromUuid(nextContext.sourceUuid));
+    return nextContext;
   }
 
   /* -------------------------------------------- */
@@ -45,7 +46,7 @@ export default class SourceConfig extends foundry.applications.api.DocumentSheet
   /* -------------------------------------------- */
 
   /** @override */
-  async _updateObject(event, formData) {
+  async _processFormSubmission(formData, options) {
     const source = foundry.utils.expandObject(formData).source;
     return this.document.update({[this.options.keyPath]: source});
   }

@@ -17,15 +17,12 @@ export default class ProficiencyConfig extends BaseConfigSheet {
 
   /** @inheritdoc */
   static get DEFAULT_OPTIONS() {
-    return foundry.utils.mergeObject(super.DEFAULT_OPTIONS ?? super.defaultOptions, {
+    return foundry.utils.mergeObject(super.DEFAULT_OPTIONS, {
       classes: ["sw5e"],
       template: "systems/sw5e/templates/apps/proficiency-config.hbs",
       width: 500,
       height: "auto"
     });
-  }
-  static get defaultOptions() {
-    return this.DEFAULT_OPTIONS;
   }
 
   /* -------------------------------------------- */
