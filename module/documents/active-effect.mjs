@@ -90,7 +90,7 @@ export default class ActiveEffect5e extends ActiveEffect {
     this.isSuppressed = false;
     if ( this.disabled || (this.parent.documentName !== "Actor") || !this.origin ) return;
     // Deliberately avoiding using fromUuidSync here, see: https://github.com/foundryvtt/dnd5e/pull/1980
-    const parsed = parseUuid(this.origin);
+    const parsed = foundry.utils.parseUuid(this.origin);
     if ( !parsed ) return;
     const { collection, documentId: parentId, embedded } = parsed;
     let item;

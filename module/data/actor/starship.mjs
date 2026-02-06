@@ -319,6 +319,7 @@ export default class StarshipData extends CommonTemplate {
   static migrateData(source) {
     super.migrateData(source);
     AttributesFields._migrateInitiative(source.attributes);
+    this.#migrateSource(source);
     this.#migratePowerRouting(source);
   }
 
@@ -329,6 +330,16 @@ export default class StarshipData extends CommonTemplate {
   static #migratePowerRouting(source) {
     source.attributes.power ??= {};
     if (typeof source.attributes.power.routing !== "string") source.attributes.power.routing = "none";
+  }
+
+  /**
+   * Convert source string into custom object.
+   * @param {object} source  The candidate source data from which the model will be constructed.
+   */
+  static #migrateSource(source) {
+    if (source.details?.source && (foundry.utils.getType(source.details.source) !== "Object")) {
+      source.details.source = { custom: source.details.source };
+    }
   }
 
   /* -------------------------------------------- */

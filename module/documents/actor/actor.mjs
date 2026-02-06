@@ -4902,8 +4902,10 @@ export default class Actor5e extends SystemDocumentMixin(Actor) {
     if (this.isToken) {
       const tokenData = d.prototypeToken;
       delete d.prototypeToken;
+      const deltaId = this.token.delta?._id ?? this.token.id;
+      if (d._id == null) d._id = deltaId;
       tokenData.delta = d;
-      const previousActorData = this.token.delta.toObject();
+      const previousActorData = this.token.delta?.toObject?.() ?? {};
       foundry.utils.setProperty(tokenData, "flags.sw5e.previousActorData", previousActorData);
       await this.sheet?.close();
       const update = await this.token.update(tokenData);
@@ -5023,7 +5025,7 @@ export default class Actor5e extends SystemDocumentMixin(Actor) {
       const actorData = this.token.getFlag("sw5e", "previousActorData");
       const tokenUpdate = this.token.toObject();
       if (actorData) {
-        actorData._id = tokenUpdate.delta._id;
+        actorData._id = tokenUpdate.delta?._id ?? baseActor.id;
         tokenUpdate.delta = actorData;
       }
 
