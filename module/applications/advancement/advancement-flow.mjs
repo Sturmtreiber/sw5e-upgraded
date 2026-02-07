@@ -1,3 +1,5 @@
+import {FormApplicationV2} from "../application-v2-compat.mjs";
+
 /**
  * Base class for the advancement interface displayed by the advancement prompt that should be subclassed by
  * individual advancement types.
@@ -7,7 +9,7 @@
  * @param {number} level          Level for which to configure this flow.
  * @param {object} [options={}]   Application rendering options.
  */
-export default class AdvancementFlow extends foundry.applications.api.FormApplicationV2 {
+export default class AdvancementFlow extends FormApplicationV2 {
   constructor(item, advancementId, level, options = {}) {
     super({}, options);
 

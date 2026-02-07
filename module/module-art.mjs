@@ -1,3 +1,5 @@
+import {FormApplicationV2} from "./applications/application-v2-compat.mjs";
+
 /**
  * @typedef {object} ModuleArtInfo
  * @property {string} actor         The path to the actor's portrait image.
@@ -108,7 +110,7 @@ export class ModuleArt {
 /**
  * A class responsible for allowing GMs to configure art provided by installed modules.
  */
-export class ModuleArtConfig extends foundry.applications.api.FormApplicationV2 {
+export class ModuleArtConfig extends FormApplicationV2 {
   /** @inheritdoc */
   constructor(object={}, options={}) {
     object = foundry.utils.mergeObject(game.settings.get("sw5e", "moduleArtConfiguration"), object, {inplace: false});

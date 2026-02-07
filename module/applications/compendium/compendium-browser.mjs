@@ -3,6 +3,7 @@ import { fontAwesomeIcon, htmlQuery, htmlQueryAll, objectHasKey, isObject, getSe
 import * as browserTabs from "./tabs/_module.mjs";
 import Tagify from "@yaireo/tagify";
 import noUiSlider from "nouislider";
+import {ApplicationV2} from "../application-v2-compat.mjs";
 
 class PackLoader {
   loadedPacks = { Actor: {}, Item: {} };
@@ -69,7 +70,7 @@ class PackLoader {
   // }
 }
 
-export default class CompendiumBrowser extends foundry.applications.api.ApplicationV2 {
+export default class CompendiumBrowser extends ApplicationV2 {
   settings;
 
   dataTabsList = [

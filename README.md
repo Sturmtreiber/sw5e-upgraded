@@ -62,3 +62,15 @@ This project is **not affiliated with** SW5E, Disney, Wizards of the Coast, or a
 Paste the following URL into **Foundry → Setup → Install System**:
 
 https://github.com/Sturmtreiber/sw5e-upgraded/releases/download/latest/system.json
+
+### Troubleshooting missing icons or UI art
+
+If you see placeholder icons or missing UI graphics after installing, the system was likely installed from the
+source tree without running the build step. The system expects assets like `packs/Icons` and `icons/svg`
+to exist at the system root (these are copied from `static/` during the build). Run the build and install the
+`dist/` output, or install using the release `system.zip`/`system.json` so the compiled CSS and copied assets
+are present. The build command is:
+
+```bash
+npm run build
+```

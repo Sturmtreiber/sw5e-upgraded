@@ -5,7 +5,9 @@
  * @param {object} options
  * @param {string} options.textKeyPath  The path to the specific HTML field being edited.
  */
-export default class JournalEditor extends foundry.applications.api.DocumentSheetV2 {
+import {DocumentSheetV2} from "../application-v2-compat.mjs";
+
+export default class JournalEditor extends DocumentSheetV2 {
   /** @inheritdoc */
   static get DEFAULT_OPTIONS() {
     return foundry.utils.mergeObject(super.DEFAULT_OPTIONS ?? super.defaultOptions, {
