@@ -1,7 +1,9 @@
 /**
  * Application for configuring the source data on actors and items.
  */
-export default class SourceConfig extends foundry.applications.api.DocumentSheetV2 {
+import {DocumentSheetV2} from "./application-v2-compat.mjs";
+
+export default class SourceConfig extends DocumentSheetV2 {
 
   /** @inheritdoc */
   static get DEFAULT_OPTIONS() {

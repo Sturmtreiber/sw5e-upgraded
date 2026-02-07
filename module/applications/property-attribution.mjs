@@ -16,7 +16,9 @@
  * @param {string} property                        Dot separated path to the property.
  * @param {object} [options={}]                    Application rendering options.
  */
-export default class PropertyAttribution extends foundry.applications.api.ApplicationV2 {
+import {ApplicationV2} from "./application-v2-compat.mjs";
+
+export default class PropertyAttribution extends ApplicationV2 {
   constructor(object, attributions, property, options = {}) {
     super(options);
     this.object = object;

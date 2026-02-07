@@ -7,7 +7,9 @@
  * @param {string} [options.dropKeyPath=null]  Path within advancement configuration where dropped items are stored.
  *                                             If populated, will enable default drop & delete behavior.
  */
-export default class AdvancementConfig extends foundry.applications.api.FormApplicationV2 {
+import {FormApplicationV2} from "../application-v2-compat.mjs";
+
+export default class AdvancementConfig extends FormApplicationV2 {
   constructor(advancement, options = {}) {
     super(advancement, options);
     this.#advancementId = advancement.id;
