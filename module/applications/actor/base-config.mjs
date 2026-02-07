@@ -3,7 +3,9 @@
  * @extends {DocumentSheetV2}
  * @abstract
  */
-export default class BaseConfigSheet extends foundry.applications.api.DocumentSheetV2 {
+import {DocumentSheetV2} from "../application-v2-compat.mjs";
+
+export default class BaseConfigSheet extends DocumentSheetV2 {
   /** @inheritdoc */
   async _onFirstRender(options) {
     await super._onFirstRender(options);

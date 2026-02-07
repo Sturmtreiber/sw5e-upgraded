@@ -1,4 +1,5 @@
 import Advancement from "../../documents/advancement/advancement.mjs";
+import {ApplicationV2} from "../application-v2-compat.mjs";
 
 /**
  * Internal type used to manage each step within the advancement process.
@@ -19,7 +20,7 @@ import Advancement from "../../documents/advancement/advancement.mjs";
  * @param {Actor5e} actor        Actor on which this advancement is being performed.
  * @param {object} [options={}]  Additional application options.
  */
-export default class AdvancementManager extends foundry.applications.api.ApplicationV2 {
+export default class AdvancementManager extends ApplicationV2 {
   constructor(actor, options = {}) {
     super(options);
 
