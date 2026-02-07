@@ -6,10 +6,22 @@ const globalFormApplication = globalThis.FormApplication;
 const globalDocumentSheet = globalThis.DocumentSheet;
 
 export const ApplicationV2 =
-  api.ApplicationV2 ?? legacy.ApplicationV2 ?? legacy.Application ?? globalApplication;
+  api.ApplicationV2 ??
+  api.Application ??
+  legacy.ApplicationV2 ??
+  legacy.Application ??
+  globalApplication;
 
 export const FormApplicationV2 =
-  api.FormApplicationV2 ?? legacy.FormApplicationV2 ?? legacy.FormApplication ?? globalFormApplication;
+  api.FormApplicationV2 ??
+  api.FormApplication ??
+  legacy.FormApplicationV2 ??
+  legacy.FormApplication ??
+  globalFormApplication;
 
 export const DocumentSheetV2 =
-  api.DocumentSheetV2 ?? legacy.DocumentSheetV2 ?? legacy.DocumentSheet ?? globalDocumentSheet;
+  api.DocumentSheetV2 ??
+  api.DocumentSheet ??
+  legacy.DocumentSheetV2 ??
+  legacy.DocumentSheet ??
+  globalDocumentSheet;
