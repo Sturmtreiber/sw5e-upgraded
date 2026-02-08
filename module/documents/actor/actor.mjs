@@ -4898,17 +4898,15 @@ export default class Actor5e extends SystemDocumentMixin(Actor) {
     previousActorIds.push(this._id);
     foundry.utils.setProperty(d.flags, "sw5e.previousActorIds", previousActorIds);
 
-    // Update unlinked Tokens, and grab a copy of any actorData adjustments to re-apply
+    // Update unlinked Tokens, and grab a copy of any delta adjustments to re-apply
     if (this.isToken) {
       const tokenData = d.prototypeToken;
       delete d.prototypeToken;
       const deltaId = this.token.delta?._id ?? this.token.id;
       d._id ??= deltaId;
       tokenData.delta = d;
-      const previousActorData = this.token.delta?.toObject?.()
-        ?? this.token.toObject?.()
-        ?? {};
-      foundry.utils.setProperty(tokenData, "flags.sw5e.previousActorData", previousActorData);
+      const previousDeltaData = this.token.delta?.toObject?.() ?? {};
+      foundry.utils.setProperty(tokenData, "flags.sw5e.previousActorData", previousDeltaData);
       await this.sheet?.close();
       const update = await this.token.update(tokenData);
       if (renderSheet) this.sheet?.render(true);
@@ -5012,7 +5010,7 @@ export default class Actor5e extends SystemDocumentMixin(Actor) {
     // Obtain a reference to the original actor
     const original = game.actors.get(this.getFlag("sw5e", "originalActor"));
 
-    // If we are reverting an unlinked token, grab the previous actorData, and create a new token
+    // If we are reverting an unlinked token, grab the previous delta, and create a new token
     if (this.isToken) {
       const baseActor = original ? original : game.actors.get(this.token.actorId);
       if (!baseActor) {

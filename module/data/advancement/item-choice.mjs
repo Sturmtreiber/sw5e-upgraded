@@ -1,4 +1,4 @@
-import { MappingField } from "../fields.mjs";
+import { MappingField, UUIDField } from "../fields.mjs";
 import PowerConfigurationData from "./power-config.mjs";
 
 export default class ItemChoiceConfigurationData extends foundry.abstract.DataModel {
@@ -16,7 +16,7 @@ export default class ItemChoiceConfigurationData extends foundry.abstract.DataMo
         blank: false, nullable: true, initial: null,
         label: "SW5E.AdvancementItemChoiceType", hint: "SW5E.AdvancementItemChoiceTypeHint"
       }),
-      pool: new foundry.data.fields.ArrayField(new foundry.data.fields.StringField(), {label: "DOCUMENT.Items"}),
+      pool: new foundry.data.fields.ArrayField(new UUIDField(), {label: "DOCUMENT.Items"}),
       power: new foundry.data.fields.EmbeddedDataField(PowerConfigurationData, {nullable: true, initial: null}),
       restriction: new foundry.data.fields.SchemaField({
         type: new foundry.data.fields.StringField({label: "SW5E.Type"}),
