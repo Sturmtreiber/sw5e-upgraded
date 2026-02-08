@@ -123,7 +123,7 @@ export const migrateWorld = async function(migrateSystemCompendiums = false) {
         console.log(`Migrating Scene document ${s.name}`);
         await s.update(updateData, { enforceTypes: false });
         // If we do not do this, then synthetic token actors remain in cache
-        // with the un-updated actorData.
+        // with stale delta data.
         s.tokens.forEach(t => (t._actor = null));
       }
     } catch(err) {
