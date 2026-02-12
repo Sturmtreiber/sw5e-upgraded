@@ -3,9 +3,9 @@
  * @extends {DocumentSheetV2}
  * @abstract
  */
-import {DocumentSheetV2} from "../application-v2-compat.mjs";
+import {LegacyDocumentSheet} from "../application-v2-compat.mjs";
 
-export default class BaseConfigSheet extends DocumentSheetV2 {
+export default class BaseConfigSheet extends LegacyDocumentSheet {
   /** @inheritdoc */
   async _onFirstRender(options) {
     await super._onFirstRender(options);

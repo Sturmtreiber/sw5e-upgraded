@@ -1,3 +1,5 @@
+import { UUIDField } from "../fields.mjs";
+
 /**
  * Data definition for Class Summary journal entry pages.
  *
@@ -14,7 +16,7 @@
 export default class ClassJournalPageData extends foundry.abstract.DataModel {
   static defineSchema() {
     return {
-      item: new foundry.data.fields.StringField({ required: true, label: "JOURNALENTRYPAGE.SW5E.Class.Item" }),
+      item: new UUIDField({ required: true, label: "JOURNALENTRYPAGE.SW5E.Class.Item" }),
       description: new foundry.data.fields.SchemaField({
         value: new foundry.data.fields.HTMLField({
           label: "JOURNALENTRYPAGE.SW5E.Class.Description",
@@ -40,7 +42,7 @@ export default class ClassJournalPageData extends foundry.abstract.DataModel {
       archetypeHeader: new foundry.data.fields.StringField({
         label: "JOURNALENTRYPAGE.SW5E.Class.ArchetypeHeader"
       }),
-      archetypeItems: new foundry.data.fields.SetField(new foundry.data.fields.StringField(), {
+      archetypeItems: new foundry.data.fields.SetField(new UUIDField(), {
         label: "JOURNALENTRYPAGE.SW5E.Class.ArchetypeItems"
       })
     };
