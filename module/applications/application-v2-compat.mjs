@@ -1,4 +1,5 @@
 const api = foundry?.applications?.api ?? {};
+const sheets = foundry?.applications?.sheets ?? {};
 const legacy = foundry?.applications ?? {};
 
 const globalApplication = globalThis.Application;
@@ -13,16 +14,19 @@ export const ApplicationV2 =
   globalApplication;
 
 export const FormApplicationV2 =
-  api.FormApplicationV2 ??
+  legacy.FormApplication ??
+  sheets.FormApplication ??
   api.FormApplication ??
+  api.FormApplicationV2 ??
   legacy.FormApplicationV2 ??
   legacy.FormApplication ??
   globalFormApplication ??
   ApplicationV2;
 
 export const DocumentSheetV2 =
-  api.DocumentSheetV2 ??
-  api.DocumentSheet ??
-  legacy.DocumentSheetV2 ??
   legacy.DocumentSheet ??
+  sheets.DocumentSheet ??
+  api.DocumentSheet ??
+  api.DocumentSheetV2 ??
+  legacy.DocumentSheetV2 ??
   globalDocumentSheet;
