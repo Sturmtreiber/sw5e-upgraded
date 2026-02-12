@@ -693,14 +693,10 @@ export default class ActorSheetOrig5e extends ActorSheetMixin(ActorSheet) {
     }
 
     // Item Context Menu
-    if (htmlElement) {
-      new ContextMenu(htmlElement, ".item-list .item", [], { onOpen: this._onItemContext.bind(this) });
-    } else {
-      new ContextMenu(html, ".item-list .item", [], { onOpen: this._onItemContext.bind(this) });
-    }
+    new ContextMenu(html$, ".item-list .item", [], { onOpen: this._onItemContext.bind(this) });
 
     // Handle default listeners last so system listeners are triggered first
-    super.activateListeners(htmlElement ?? html);
+    super.activateListeners(html$);
   }
 
   /* -------------------------------------------- */
