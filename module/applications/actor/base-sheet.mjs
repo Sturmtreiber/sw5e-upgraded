@@ -875,6 +875,7 @@ export default class ActorSheet5e extends ActorSheetMixin(ActorSheet) {
 
   /** @inheritdoc */
   activateListeners(html) {
+    this._sw5eListenersActivatedElement = html instanceof HTMLElement ? html : html?.[0];
     const htmlElement = html instanceof HTMLElement ? html : html?.[0];
     const html$ = htmlElement ? $(htmlElement) : html;
 

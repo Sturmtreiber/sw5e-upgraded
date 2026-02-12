@@ -19,6 +19,7 @@ export const FormApplicationV2 =
   api.FormApplication ??
   api.FormApplicationV2 ??
   legacy.FormApplicationV2 ??
+  legacy.FormApplication ??
   globalFormApplication ??
   ApplicationV2;
 
