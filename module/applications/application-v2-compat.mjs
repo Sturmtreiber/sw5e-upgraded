@@ -30,3 +30,22 @@ export const DocumentSheetV2 =
   api.DocumentSheetV2 ??
   legacy.DocumentSheetV2 ??
   globalDocumentSheet;
+
+
+export const LegacyFormApplication =
+  globalFormApplication ??
+  legacy.FormApplication ??
+  sheets.FormApplication ??
+  api.FormApplication ??
+  api.FormApplicationV2 ??
+  legacy.FormApplicationV2 ??
+  ApplicationV2;
+
+export const LegacyDocumentSheet =
+  globalDocumentSheet ??
+  legacy.DocumentSheet ??
+  sheets.DocumentSheet ??
+  api.DocumentSheet ??
+  api.DocumentSheetV2 ??
+  legacy.DocumentSheetV2 ??
+  ApplicationV2;
