@@ -4,6 +4,14 @@
  * @mixin
  */
 export const ActorSheetMixin = Base => class extends Base {
+  /** @inheritDoc */
+  async _onRender(...args) {
+    await super._onRender?.(...args);
+    const element = this.element instanceof HTMLElement ? this.element : this.element?.[0];
+    if (!element) return;
+    this.activateListeners(element);
+  }
+
   /**
    * Handle input changes to numeric form fields, allowing them to accept delta-typed inputs.
    * @param {Event} event  Triggering event.

@@ -613,86 +613,89 @@ export default class ActorSheetOrig5e extends ActorSheetMixin(ActorSheet) {
 
   /** @inheritdoc */
   activateListeners(html) {
+    const htmlElement = html instanceof HTMLElement ? html : html?.[0];
+    const html$ = htmlElement ? $(htmlElement) : html;
+
     // Activate Item Filters
-    const filterLists = html.find(".filter-list");
+    const filterLists = html$.find(".filter-list");
     filterLists.each(this._initializeFilterItemList.bind(this));
     filterLists.on("click", ".filter-item", this._onToggleFilter.bind(this));
 
     // Item summaries
-    html.find(".item .item-name.rollable h4").click(event => this._onItemSummary(event));
+    html$.find(".item .item-name.rollable h4").click(event => this._onItemSummary(event));
 
     // View Item Sheets
-    html.find(".item-edit").click(this._onItemEdit.bind(this));
+    html$.find(".item-edit").click(this._onItemEdit.bind(this));
 
     // Property attributions
-    html.find("[data-attribution]").mouseover(this._onPropertyAttribution.bind(this));
-    html.find(".attributable").mouseover(this._onPropertyAttribution.bind(this));
+    html$.find("[data-attribution]").mouseover(this._onPropertyAttribution.bind(this));
+    html$.find(".attributable").mouseover(this._onPropertyAttribution.bind(this));
 
     // Preparation Warnings
-    html.find(".warnings").click(this._onWarningLink.bind(this));
+    html$.find(".warnings").click(this._onWarningLink.bind(this));
 
     // Editable Only Listeners
     if (this.isEditable) {
       // Input focus and update
-      const inputs = html.find("input");
+      const inputs = html$.find("input");
       inputs.focus(ev => ev.currentTarget.select());
       inputs.addBack().find('[type="text"][data-dtype="Number"]').change(this._onChangeInputDelta.bind(this));
 
       // Ability Proficiency
-      html.find(".ability-proficiency").click(this._onToggleAbilityProficiency.bind(this));
+      html$.find(".ability-proficiency").click(this._onToggleAbilityProficiency.bind(this));
 
       // Toggle Skill Proficiency
-      html.find(".skill-proficiency").on("click contextmenu", event => this._onCycleProficiency(event, "skill"));
+      html$.find(".skill-proficiency").on("click contextmenu", event => this._onCycleProficiency(event, "skill"));
 
       // Toggle Tool Proficiency
-      html.find(".tool-proficiency").on("click contextmenu", event => this._onCycleProficiency(event, "tool"));
+      html$.find(".tool-proficiency").on("click contextmenu", event => this._onCycleProficiency(event, "tool"));
 
       // Trait Selector
-      html.find(".trait-selector").click(this._onTraitSelector.bind(this));
+      html$.find(".trait-selector").click(this._onTraitSelector.bind(this));
 
       // Configure Special Flags
-      html.find(".config-button").click(this._onConfigMenu.bind(this));
+      html$.find(".config-button").click(this._onConfigMenu.bind(this));
 
       // Owned Item management
-      html.find(".item-create").click(this._onItemCreate.bind(this));
-      html.find(".item-delete").click(this._onItemDelete.bind(this));
-      html
+      html$.find(".item-create").click(this._onItemCreate.bind(this));
+      html$.find(".item-delete").click(this._onItemDelete.bind(this));
+      html$
         .find(".item-uses input")
         .click(ev => ev.target.select())
         .change(this._onUsesChange.bind(this));
-      html.find(".slot-max-override").click(this._onPowerSlotOverride.bind(this));
+      html$.find(".slot-max-override").click(this._onPowerSlotOverride.bind(this));
 
       // Active Effect management
-      html.find(".effect-control").click(ev => ActiveEffect5e.onManageActiveEffect(ev, this.actor));
-      this._disableOverriddenFields(html);
+      html$.find(".effect-control").click(ev => ActiveEffect5e.onManageActiveEffect(ev, this.actor));
+      this._disableOverriddenFields(html$);
     }
 
     // Owner Only Listeners, for non-compendium actors.
     if ( this.actor.isOwner && !this.actor.compendium ) {
       // Ability Checks
-      html.find(".ability-name").click(this._onRollAbilityTest.bind(this));
+      html$.find(".ability-name").click(this._onRollAbilityTest.bind(this));
 
       // Roll Skill Checks
-      html.find(".skill-name").click(this._onRollSkillCheck.bind(this));
+      html$.find(".skill-name").click(this._onRollSkillCheck.bind(this));
 
       // Roll Tool Checks.
-      html.find(".tool-name").on("click", this._onRollToolCheck.bind(this));
+      html$.find(".tool-name").on("click", this._onRollToolCheck.bind(this));
 
       // Item Rolling
-      html.find(".rollable .item-image").click(event => this._onItemUse(event));
-      html.find(".item .item-recharge").click(event => this._onItemRecharge(event));
+      html$.find(".rollable .item-image").click(event => this._onItemUse(event));
+      html$.find(".item .item-recharge").click(event => this._onItemRecharge(event));
     }
 
     // Otherwise, remove rollable classes
     else {
-      html.find(".rollable").each((i, el) => el.classList.remove("rollable"));
+      html$.find(".rollable").each((i, el) => el.classList.remove("rollable"));
     }
 
     // Item Context Menu
-    new ContextMenu(html, ".item-list .item", [], { onOpen: this._onItemContext.bind(this) });
+    new ContextMenu(html$, ".item-list .item", [], { onOpen: this._onItemContext.bind(this) });
 
     // Handle default listeners last so system listeners are triggered first
-    super.activateListeners(html);
+    super.activateListeners(html$);
   }
 
   /* -------------------------------------------- */

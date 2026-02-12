@@ -955,14 +955,6 @@
         },
         "source": {}
       },
-      "speciesDescription": {
-        "description": {
-          "value": "",
-          "chat": "",
-          "unidentified": ""
-        },
-        "source": {}
-      },
       "physicalItem": {
         "quantity": 1,
         "weight": 0,
@@ -1206,7 +1198,7 @@
       }
     },
     "species": {
-      "templates": ["speciesDescription"],
+      "templates": ["itemDescription"],
       "identifier": "",
       "advancement": [],
       "movement": {
