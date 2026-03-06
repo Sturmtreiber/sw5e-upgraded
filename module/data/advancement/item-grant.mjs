@@ -1,10 +1,11 @@
 import PowerConfigurationData from "./power-config.mjs";
+import { UUIDField } from "../fields.mjs";
 
 export default class ItemGrantConfigurationData extends foundry.abstract.DataModel {
   /** @inheritdoc */
   static defineSchema() {
     return {
-      items: new foundry.data.fields.ArrayField(new foundry.data.fields.StringField(), {
+      items: new foundry.data.fields.ArrayField(new UUIDField(), {
         required: true,
         label: "DOCUMENT.Items"
       }),

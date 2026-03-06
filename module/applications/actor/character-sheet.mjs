@@ -221,16 +221,17 @@ export default class ActorSheet5eCharacter extends ActorSheet5e {
 
   /** @inheritDoc */
   activateListeners(html) {
-    super.activateListeners(html);
+    const html$ = html instanceof HTMLElement ? $(html) : html;
+    super.activateListeners(html$);
     if (!this.isEditable) return;
-    html.find(".level-selector").change(this._onLevelChange.bind(this));
-    html.find(".item-toggle").click(this._onToggleItem.bind(this));
-    html.find(".short-rest").click(this._onShortRest.bind(this));
-    html.find(".long-rest").click(this._onLongRest.bind(this));
-    html.find(".rollable[data-action]").click(this._onSheetAction.bind(this));
+    html$.find(".level-selector").change(this._onLevelChange.bind(this));
+    html$.find(".item-toggle").click(this._onToggleItem.bind(this));
+    html$.find(".short-rest").click(this._onShortRest.bind(this));
+    html$.find(".long-rest").click(this._onLongRest.bind(this));
+    html$.find(".rollable[data-action]").click(this._onSheetAction.bind(this));
 
     // Send Languages to Chat onClick
-    html.find('[data-options="share-languages"]').click(event => {
+    html$.find('[data-options="share-languages"]').click(event => {
       event.preventDefault();
       let langs = Array.from(this.actor.system.traits.languages.value)
         .map(l => CONFIG.SW5E.languages[l] || l)
@@ -270,8 +271,8 @@ export default class ActorSheet5eCharacter extends ActorSheet5e {
     });
 
     // Item Delete Confirmation
-    html.find(".item-delete").off("click");
-    html.find(".item-delete").click(event => {
+    html$.find(".item-delete").off("click");
+    html$.find(".item-delete").click(event => {
       let li = $(event.currentTarget).parents(".item");
       let itemId = li.attr("data-item-id");
       let item = this.actor.items.get(itemId);
@@ -466,6 +467,7 @@ export default class ActorSheet5eCharacter extends ActorSheet5e {
  * @param {object} context
  */
 async function addFavorites(app, html, context) {
+  const html$ = html instanceof HTMLElement ? $(html) : html;
   // This function is adapted for the SwaltSheet from the Favorites Item
   // Tab Module created for Foundry VTT - by Felix Müller (Felix#6196 on Discord).
   // It is licensed under a Creative Commons Attribution 4.0 International License
@@ -545,7 +547,7 @@ async function addFavorites(app, html, context) {
           "flags.favtab.isFavourite": !item.flags.favtab.isFavourite
         });
       });
-      html.find(`.item[data-item-id="${item.id}"]`).find(".item-controls").prepend(favBtn);
+      html$.find(`.item[data-item-id="${item.id}"]`).find(".item-controls").prepend(favBtn);
     }
 
     if (isFav) {
@@ -591,7 +593,7 @@ async function addFavorites(app, html, context) {
   //   html.find('.favourite .item-controls').css('flex', '0 0 22px');
   // }
 
-  let tabContainer = html.find(".favtabtarget");
+  let tabContainer = html$.find(".favtabtarget");
   context.favItems = favItems.length > 0 ? favItems.sort((a, b) => a.flags.favtab.sort - b.flags.favtab.sort) : false;
   context.favFeats = favFeats.length > 0 ? favFeats.sort((a, b) => a.flags.favtab.sort - b.flags.favtab.sort) : false;
   context.favPowers = powerCount > 0 ? favPowers : false;
@@ -671,10 +673,11 @@ async function addFavorites(app, html, context) {
  * @param {object} data
  */
 async function addSubTabs(app, html, data) {
+  const html$ = html instanceof HTMLElement ? $(html) : html;
   if (data.options.subTabs == null) {
     // Let subTabs = []; //{subgroup: '', target: '', active: false}
     data.options.subTabs = {};
-    html.find("[data-subgroup-selection] [data-subgroup]").each((idx, el) => {
+    html$.find("[data-subgroup-selection] [data-subgroup]").each((idx, el) => {
       let subgroup = el.getAttribute("data-subgroup");
       let target = el.getAttribute("data-target");
       let targetObj = { target, active: el.classList.contains("active") };
@@ -690,21 +693,21 @@ async function addSubTabs(app, html, data) {
   for (const group in data.options.subTabs) {
     data.options.subTabs[group].forEach(tab => {
       if (tab.active) {
-        html.find(`[data-subgroup=${group}][data-target=${tab.target}]`).addClass("active");
+        html$.find(`[data-subgroup=${group}][data-target=${tab.target}]`).addClass("active");
       } else {
-        html.find(`[data-subgroup=${group}][data-target=${tab.target}]`).removeClass("active");
+        html$.find(`[data-subgroup=${group}][data-target=${tab.target}]`).removeClass("active");
       }
     });
   }
 
-  html
+  html$
     .find("[data-subgroup-selection]")
     .children()
     .on("click", event => {
       let subgroup = event.target.closest("[data-subgroup]").getAttribute("data-subgroup");
       let target = event.target.closest("[data-target]").getAttribute("data-target");
-      html.find(`[data-subgroup=${subgroup}]`).removeClass("active");
-      html.find(`[data-subgroup=${subgroup}][data-target=${target}]`).addClass("active");
+      html$.find(`[data-subgroup=${subgroup}]`).removeClass("active");
+      html$.find(`[data-subgroup=${subgroup}][data-target=${target}]`).addClass("active");
       data.options.subTabs[subgroup].map(el => {
         el.active = el.target === target;
         return el;

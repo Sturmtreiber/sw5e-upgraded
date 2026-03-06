@@ -1,10 +1,10 @@
 import Actor5e from "../../documents/actor/actor.mjs";
-import {DocumentSheetV2} from "../application-v2-compat.mjs";
+import {LegacyDocumentSheet} from "../application-v2-compat.mjs";
 
 /**
  * A specialized form used to select from a checklist of attributes, traits, or properties
  */
-export default class ActorTypeConfig extends DocumentSheetV2 {
+export default class ActorTypeConfig extends LegacyDocumentSheet {
   /** @inheritdoc */
   static get DEFAULT_OPTIONS() {
     return foundry.utils.mergeObject(super.DEFAULT_OPTIONS ?? super.defaultOptions, {

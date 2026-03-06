@@ -276,32 +276,33 @@ export default class ActorSheetOrig5eVehicle extends ActorSheet5e {
 
   /** @override */
   activateListeners(html) {
-    super.activateListeners(html);
+    const html$ = html instanceof HTMLElement ? $(html) : html;
+    super.activateListeners(html$);
     if (!this.isEditable) return;
 
-    html.find(".item-toggle").click(this._onToggleItem.bind(this));
-    html
+    html$.find(".item-toggle").click(this._onToggleItem.bind(this));
+    html$
       .find(".item-hp input")
       .click(evt => evt.target.select())
       .change(this._onHPChange.bind(this));
 
-    html
+    html$
       .find(".item:not(.cargo-row) input[data-property]")
       .click(evt => evt.target.select())
       .change(this._onEditInSheet.bind(this));
 
-    html
+    html$
       .find(".cargo-row input")
       .click(evt => evt.target.select())
       .change(this._onCargoRowChange.bind(this));
 
-    html
+    html$
       .find(".item:not(.cargo-row) .item-qty input")
       .click(evt => evt.target.select())
       .change(this._onQtyChange.bind(this));
 
     if (this.actor.system.attributes.actions.stations) {
-      html.find(".counter.actions, .counter.action-thresholds").hide();
+      html$.find(".counter.actions, .counter.action-thresholds").hide();
     }
   }
 
