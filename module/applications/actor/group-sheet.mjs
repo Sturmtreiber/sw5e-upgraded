@@ -235,19 +235,20 @@ export default class GroupActorSheet extends ActorSheetMixin(ActorSheet) {
 
   /** @inheritDoc */
   activateListeners(html) {
-    super.activateListeners(html);
-    html.find(".group-member .name").click(this._onClickMemberName.bind(this));
+    const html$ = html instanceof HTMLElement ? $(html) : html;
+    super.activateListeners(html$);
+    html$.find(".group-member .name").click(this._onClickMemberName.bind(this));
     if (this.isEditable) {
       // Input focus and update
-      const inputs = html.find("input");
+      const inputs = html$.find("input");
       inputs.focus(ev => ev.currentTarget.select());
       inputs.addBack().find('[type="text"][data-dtype="Number"]').change(this._onChangeInputDelta.bind(this));
-      html.find(".action-button").click(this._onClickActionButton.bind(this));
-      html.find(".item-control").click(this._onClickItemControl.bind(this));
-      html.find(".item .rollable h4").click(event => this._onItemSummary(event));
-      html.find(".item-uses input").change(this._onUsesChange.bind(this));
-      html.find(".item-quantity input").change(this._onQuantityChange.bind(this));
-      new ContextMenu(html, ".item-list .item", [], { onOpen: this._onItemContext.bind(this) });
+      html$.find(".action-button").click(this._onClickActionButton.bind(this));
+      html$.find(".item-control").click(this._onClickItemControl.bind(this));
+      html$.find(".item .rollable h4").click(event => this._onItemSummary(event));
+      html$.find(".item-uses input").change(this._onUsesChange.bind(this));
+      html$.find(".item-quantity input").change(this._onQuantityChange.bind(this));
+      new ContextMenu(html$, ".item-list .item", [], { onOpen: this._onItemContext.bind(this) });
     }
   }
 
