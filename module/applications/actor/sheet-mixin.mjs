@@ -9,6 +9,7 @@ export const ActorSheetMixin = Base => class extends Base {
     await super._onRender?.(...args);
     const element = this.element instanceof HTMLElement ? this.element : this.element?.[0];
     if (!element) return;
+    if (this._sw5eListenersActivatedElement === element) return;
     this.activateListeners(element);
   }
 
