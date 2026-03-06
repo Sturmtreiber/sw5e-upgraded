@@ -281,26 +281,27 @@ export default class ActorSheet5eStarship extends ActorSheet5e {
 
   /** @inheritDoc */
   activateListeners(html) {
-    super.activateListeners(html);
-    html.find(".health .rollable").click(this._onRollHPFormula.bind(this));
-    html.find(".refuel").click(this._onIncrementFuelLevel.bind(this));
-    html.find(".burnfuel").click(this._onDecrementFuelLevel.bind(this));
-    html.find(".powerslider").change("input", this._powerRoutingSliderUpdate.bind(this));
+    const html$ = html instanceof HTMLElement ? $(html) : html;
+    super.activateListeners(html$);
+    html$.find(".health .rollable").click(this._onRollHPFormula.bind(this));
+    html$.find(".refuel").click(this._onIncrementFuelLevel.bind(this));
+    html$.find(".burnfuel").click(this._onDecrementFuelLevel.bind(this));
+    html$.find(".powerslider").change("input", this._powerRoutingSliderUpdate.bind(this));
     // Tier selector
-    html.find(".tier-selector").change(this._onTierChange.bind(this));
+    html$.find(".tier-selector").change(this._onTierChange.bind(this));
     // Recharge, Refitting and Regen Repairs
-    html.find(".recharge-repair").click(this._onRechargeRepair.bind(this));
-    html.find(".refitting-repair").click(this._onRefittingRepair.bind(this));
-    html.find(".regen-repair").click(this._onRegenRepair.bind(this));
+    html$.find(".recharge-repair").click(this._onRechargeRepair.bind(this));
+    html$.find(".refitting-repair").click(this._onRefittingRepair.bind(this));
+    html$.find(".regen-repair").click(this._onRegenRepair.bind(this));
     // Rollable sheet actions
-    html.find(".rollable[data-action]").click(this._onSheetAction.bind(this));
+    html$.find(".rollable[data-action]").click(this._onSheetAction.bind(this));
     // Deployment controls
-    html.find(".deploy-control").click(this._onDeployControl.bind(this));
+    html$.find(".deploy-control").click(this._onDeployControl.bind(this));
     // Item State Toggling
-    html.find(".item-toggle").click(this._onToggleItem.bind(this));
+    html$.find(".item-toggle").click(this._onToggleItem.bind(this));
     // Display firing arc
-    html.find(".item.group-grid-inventory").mouseover(this._onMouseOverItem.bind(this));
-    html.find(".item.group-grid-inventory").mouseout(this._onMouseOutItem.bind(this));
+    html$.find(".item.group-grid-inventory").mouseover(this._onMouseOverItem.bind(this));
+    html$.find(".item.group-grid-inventory").mouseout(this._onMouseOutItem.bind(this));
   }
 
   /* -------------------------------------------- */
