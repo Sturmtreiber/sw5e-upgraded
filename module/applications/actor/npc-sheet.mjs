@@ -243,9 +243,10 @@ export default class ActorSheet5eNPC extends ActorSheet5e {
 
   /** @inheritDoc */
   activateListeners(html) {
-    super.activateListeners(html);
+    const html$ = html instanceof HTMLElement ? $(html) : html;
+    super.activateListeners(html$);
     if (!this.isEditable) return;
-    html.find(".level-selector").change(this._onLevelChange.bind(this));
+    html$.find(".level-selector").change(this._onLevelChange.bind(this));
   }
 
   /* -------------------------------------------- */
