@@ -271,17 +271,17 @@ function makeResourceField(schemaOptions = {}) {
         required: true,
         integer: true,
         initial: 0,
-        labels: "SW5E.ResourceValue"
+        label: "SW5E.ResourceValue"
       }),
       max: new foundry.data.fields.NumberField({
         required: true,
         integer: true,
         initial: 0,
-        labels: "SW5E.ResourceMax"
+        label: "SW5E.ResourceMax"
       }),
-      sr: new foundry.data.fields.BooleanField({ required: true, labels: "SW5E.ShortRestRecovery" }),
-      lr: new foundry.data.fields.BooleanField({ required: true, labels: "SW5E.LongRestRecovery" }),
-      label: new foundry.data.fields.StringField({ required: true, labels: "SW5E.ResourceLabel" })
+      sr: new foundry.data.fields.BooleanField({ required: true, label: "SW5E.ShortRestRecovery" }),
+      lr: new foundry.data.fields.BooleanField({ required: true, label: "SW5E.LongRestRecovery" }),
+      label: new foundry.data.fields.StringField({ required: true, label: "SW5E.ResourceLabel" })
     },
     schemaOptions
   );

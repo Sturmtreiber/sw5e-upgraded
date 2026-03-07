@@ -11,6 +11,8 @@ export default class CharacterImporter {
   async transform(rawCharacter) {
     const sourceCharacter = JSON.parse(rawCharacter); // Source character
 
+    const avatar = sourceCharacter.avatar?.trim?.() ? sourceCharacter.avatar.trim() : "icons/svg/mystery-man.svg";
+
     const details = {
       species: sourceCharacter.attribs.find(e => e.name === "race").current,
       background: sourceCharacter.attribs.find(e => e.name === "background").current,
@@ -121,7 +123,12 @@ export default class CharacterImporter {
     const targetCharacter = {
       name: sourceCharacter.name,
       type: "character",
-      img: sourceCharacter.avatar,
+      img: avatar,
+      prototypeToken: {
+        texture: {
+          src: avatar
+        }
+      },
       system: {
         abilities,
         details,

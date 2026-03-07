@@ -85,7 +85,9 @@ export default class TraitSelector extends BaseConfigSheet {
   activateListeners(html) {
     super.activateListeners(html);
 
-    for (const checkbox of html[0].querySelectorAll("input[type='checkbox']")) {
+    const root = html instanceof HTMLElement ? html : html?.[0];
+    if (!root) return;
+    for (const checkbox of root.querySelectorAll("input[type='checkbox']")) {
       if (checkbox.checked) this._onToggleCategory(checkbox);
     }
   }

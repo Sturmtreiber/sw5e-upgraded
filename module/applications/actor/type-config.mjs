@@ -1,10 +1,10 @@
 import Actor5e from "../../documents/actor/actor.mjs";
-import {DocumentSheetV2} from "../application-v2-compat.mjs";
+import {LegacyDocumentSheet} from "../application-v2-compat.mjs";
 
 /**
  * A specialized form used to select from a checklist of attributes, traits, or properties
  */
-export default class ActorTypeConfig extends DocumentSheetV2 {
+export default class ActorTypeConfig extends LegacyDocumentSheet {
   /** @inheritdoc */
   static get DEFAULT_OPTIONS() {
     return foundry.utils.mergeObject(super.DEFAULT_OPTIONS ?? super.defaultOptions, {
@@ -108,12 +108,13 @@ export default class ActorTypeConfig extends DocumentSheetV2 {
   /** @inheritdoc */
   activateListeners(html) {
     super.activateListeners(html);
-    html.find("input[name='custom']").focusin(this._onCustomFieldFocused.bind(this));
+    const html$ = html instanceof HTMLElement ? $(html) : html;
+    html$.find("input[name='custom']").focusin(this._onCustomFieldFocused.bind(this));
 
     const overrides = Object.keys(foundry.utils.flattenObject(this.actor.overrides || {}));
     if ( overrides.some(k => k.startsWith("system.details.type.")) ) {
       // Disable editing any type field if one of them is overridden by an Active Effect.
-      html.find("input, select").each((i, el) => {
+      html$.find("input, select").each((i, el) => {
         el.disabled = true;
         el.dataset.tooltip = "SW5E.ActiveEffectOverrideWarning";
       });

@@ -3,9 +3,9 @@
  * @extends {DocumentSheetV2}
  * @abstract
  */
-import {DocumentSheetV2} from "../application-v2-compat.mjs";
+import {LegacyDocumentSheet} from "../application-v2-compat.mjs";
 
-export default class BaseConfigSheet extends DocumentSheetV2 {
+export default class BaseConfigSheet extends LegacyDocumentSheet {
   /** @inheritdoc */
   async _onFirstRender(options) {
     await super._onFirstRender(options);
@@ -16,7 +16,7 @@ export default class BaseConfigSheet extends DocumentSheetV2 {
   async _onRender(options) {
     await super._onRender(options);
     if (!this.isEditable) return;
-    const element = this.element;
+    const element = this.element instanceof HTMLElement ? this.element : this.element?.[0];
     if (!element) return;
     if (this._overrideInputElement && this._overrideInputElement !== element) {
       this._overrideInputElement.removeEventListener("change", this._overrideInputChangeHandler);
@@ -59,7 +59,7 @@ export default class BaseConfigSheet extends DocumentSheetV2 {
    */
   _onOverrideInputChange() {
     if (!this.isEditable) return;
-    const element = this.element;
+    const element = this.element instanceof HTMLElement ? this.element : this.element?.[0];
     if (!element) return;
     this._applyActorOverrideWarnings(element);
   }

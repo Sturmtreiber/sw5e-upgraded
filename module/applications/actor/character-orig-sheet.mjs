@@ -295,13 +295,14 @@ export default class ActorSheetOrig5eCharacter extends ActorSheetOrig5e {
 
   /** @inheritDoc */
   activateListeners(html) {
-    super.activateListeners(html);
+    const html$ = html instanceof HTMLElement ? $(html) : html;
+    super.activateListeners(html$);
     if (!this.isEditable) return;
-    html.find(".level-selector").change(this._onLevelChange.bind(this));
-    html.find(".item-toggle").click(this._onToggleItem.bind(this));
-    html.find(".short-rest").click(this._onShortRest.bind(this));
-    html.find(".long-rest").click(this._onLongRest.bind(this));
-    html.find(".rollable[data-action]").click(this._onSheetAction.bind(this));
+    html$.find(".level-selector").change(this._onLevelChange.bind(this));
+    html$.find(".item-toggle").click(this._onToggleItem.bind(this));
+    html$.find(".short-rest").click(this._onShortRest.bind(this));
+    html$.find(".long-rest").click(this._onLongRest.bind(this));
+    html$.find(".rollable[data-action]").click(this._onSheetAction.bind(this));
   }
 
   /* -------------------------------------------- */

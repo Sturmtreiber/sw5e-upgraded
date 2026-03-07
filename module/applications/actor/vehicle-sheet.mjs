@@ -141,6 +141,7 @@ export default class ActorSheet5eVehicle extends ActorSheet5e {
         hasActions: true,
         crewable: true,
         dataset: { type: "feat", "activation.type": "crew" },
+        required: true,
         columns: [
           {
             label: game.i18n.localize("SW5E.Cover"),
@@ -154,24 +155,28 @@ export default class ActorSheet5eVehicle extends ActorSheet5e {
         items: [],
         crewable: true,
         dataset: { type: "equipment", "armor.type": "vehicle" },
-        columns: equipmentColumns
+        columns: equipmentColumns,
+        required: true
       },
       passive: {
         label: game.i18n.localize("SW5E.Features"),
         items: [],
-        dataset: { type: "feat" }
+        dataset: { type: "feat" },
+        required: true
       },
       reactions: {
         label: game.i18n.localize("SW5E.ReactionPl"),
         items: [],
-        dataset: { type: "feat", "activation.type": "reaction" }
+        dataset: { type: "feat", "activation.type": "reaction" },
+        required: true
       },
       weapons: {
         label: game.i18n.localize(`${CONFIG.Item.typeLabels.weapon}Pl`),
         items: [],
         crewable: true,
         dataset: { type: "weapon", "weapon-type": "siege" },
-        columns: equipmentColumns
+        columns: equipmentColumns,
+        required: true
       }
     };
 
@@ -192,7 +197,8 @@ export default class ActorSheet5eVehicle extends ActorSheet5e {
         css: "cargo-row crew",
         editableName: true,
         dataset: { type: "crew" },
-        columns: cargoColumns
+        columns: cargoColumns,
+        required: true
       },
       passengers: {
         label: game.i18n.localize("SW5E.VehiclePassengers"),
@@ -200,12 +206,14 @@ export default class ActorSheet5eVehicle extends ActorSheet5e {
         css: "cargo-row passengers",
         editableName: true,
         dataset: { type: "passengers" },
-        columns: cargoColumns
+        columns: cargoColumns,
+        required: true
       },
       cargo: {
         label: game.i18n.localize("SW5E.VehicleCargo"),
         items: [],
         dataset: { type: "loot" },
+        required: true,
         columns: [
           {
             label: game.i18n.localize("SW5E.Quantity"),
@@ -277,32 +285,33 @@ export default class ActorSheet5eVehicle extends ActorSheet5e {
 
   /** @override */
   activateListeners(html) {
-    super.activateListeners(html);
+    const html$ = html instanceof HTMLElement ? $(html) : html;
+    super.activateListeners(html$);
     if (!this.isEditable) return;
 
-    html.find(".item-toggle").click(this._onToggleItem.bind(this));
-    html
+    html$.find(".item-toggle").click(this._onToggleItem.bind(this));
+    html$
       .find(".item-hp input")
       .click(evt => evt.target.select())
       .change(this._onHPChange.bind(this));
 
-    html
+    html$
       .find(".item:not(.cargo-row) input[data-property]")
       .click(evt => evt.target.select())
       .change(this._onEditInSheet.bind(this));
 
-    html
+    html$
       .find(".cargo-row input")
       .click(evt => evt.target.select())
       .change(this._onCargoRowChange.bind(this));
 
-    html
+    html$
       .find(".item:not(.cargo-row) .item-qty input")
       .click(evt => evt.target.select())
       .change(this._onQtyChange.bind(this));
 
     if (this.actor.system.attributes.actions.stations) {
-      html.find(".counter.actions, .counter.action-thresholds").hide();
+      html$.find(".counter.actions, .counter.action-thresholds").hide();
     }
   }
 
@@ -393,6 +402,27 @@ export default class ActorSheet5eVehicle extends ActorSheet5e {
       return this.actor.update({ [`system.cargo.${type}`]: cargo });
     }
     return super._onItemDelete(event);
+  }
+
+  /* -------------------------------------------- */
+
+  /** @override */
+  async _onDropActor(event, data) {
+    const cls = getDocumentClass("Actor");
+    const sourceActor = await cls.fromDropData(data);
+    if (!sourceActor) return false;
+
+    const entry = {
+      name: sourceActor.name,
+      quantity: 1
+    };
+
+    const dropRow = event.target?.closest?.(".cargo-row");
+    const property = dropRow?.classList?.contains("passengers") ? "passengers" : "crew";
+    const rows = foundry.utils.deepClone(this.actor.system.cargo[property] ?? []);
+    rows.push(entry);
+    await this.actor.update({ [`system.cargo.${property}`]: rows });
+    return false;
   }
 
   /* -------------------------------------------- */
