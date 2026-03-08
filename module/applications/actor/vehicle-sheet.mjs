@@ -418,11 +418,54 @@ export default class ActorSheet5eVehicle extends ActorSheet5e {
     };
 
     const dropRow = event.target?.closest?.(".cargo-row");
-    const property = dropRow?.classList?.contains("passengers") ? "passengers" : "crew";
-    const rows = foundry.utils.deepClone(this.actor.system.cargo[property] ?? []);
-    rows.push(entry);
-    await this.actor.update({ [`system.cargo.${property}`]: rows });
-    return false;
+    const preselected = dropRow?.classList?.contains("passengers") ? "passengers" : "crew";
+    const assignmentTypes = {
+      crew: game.i18n.localize("SW5E.VehicleCrew"),
+      passengers: game.i18n.localize("SW5E.VehiclePassengers")
+    };
+
+    const rememberOptions = html => {
+      let value = preselected;
+      html.find("input").each((i, el) => {
+        if (el.checked) value = el.value;
+      });
+      return ["crew", "passengers"].includes(value) ? value : "crew";
+    };
+
+    return new Dialog(
+      {
+        title: game.i18n.format("SW5E.DeploymentPromptTitle", {
+          crew: sourceActor.name,
+          starship: this.actor.name
+        }),
+        content: {
+          i18n: assignmentTypes,
+          preselected
+        },
+        default: "deploy",
+        buttons: {
+          deploy: {
+            icon: '<i class="fas fa-check"></i>',
+            label: game.i18n.localize("SW5E.DeploymentAcceptSettings"),
+            callback: async html => {
+              const property = rememberOptions(html);
+              const rows = foundry.utils.deepClone(this.actor.system.cargo[property] ?? []);
+              rows.push(entry);
+              await this.actor.update({ [`system.cargo.${property}`]: rows });
+            }
+          },
+          cancel: {
+            icon: '<i class="fas fa-times"></i>',
+            label: game.i18n.localize("Cancel")
+          }
+        }
+      },
+      {
+        classes: ["dialog", "sw5e"],
+        width: 400,
+        template: "systems/sw5e/templates/apps/deployment-prompt.hbs"
+      }
+    ).render(true);
   }
 
   /* -------------------------------------------- */
