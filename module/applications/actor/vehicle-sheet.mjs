@@ -180,6 +180,18 @@ export default class ActorSheet5eVehicle extends ActorSheet5e {
       }
     };
 
+
+    context.items.forEach(item => {
+      const { uses, recharge } = item.system;
+      const ctx = (context.itemContext[item.id] ??= {});
+      ctx.id = item.id;
+      ctx.canToggle = false;
+      ctx.isExpanded = this._expanded.has(item.id);
+      ctx.hasUses = uses && uses.max > 0;
+      ctx.isOnCooldown = recharge && !!recharge.value && recharge.charged === false;
+      ctx.isDepleted = item.isOnCooldown && uses.per && uses.value > 0;
+    });
+
     const cargo = {
       crew: {
         label: game.i18n.localize("SW5E.VehicleCrew"),

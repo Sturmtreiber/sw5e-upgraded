@@ -67,15 +67,33 @@ export default class ActorSheet5eStarship extends ActorSheet5e {
     const anyActive = !!ssDeploy.active.value;
     for (const key of Object.keys(CONFIG.SW5E.ssCrewStationTypes)) {
       const ssDeployment = ssDeploy[key];
-      ssDeployment.actorsVisible = !!(!anyDeployed || ssDeployment.items?.size);
+      ssDeployment.actorsVisible = !!(!anyDeployed || ssDeployment.items?.size || ssDeployment.value);
       if (this._filters.ssactions.has("activeDeploy")) ssDeployment.actionsVisible = !anyActive || ssDeployment.active;
       else ssDeployment.actionsVisible = !!(ssDeployment.actorsVisible || ssDeployment.value);
     }
 
+    const toDisplayActor = uuid => {
+      const actor = fromUuidSynchronous(uuid);
+      return {
+        uuid,
+        name: actor?.name ?? uuid,
+        img: actor?.img ?? "icons/svg/mystery-man.svg"
+      };
+    };
+
     context.deployment = {
-      pilot: { ...(ssDeploy?.pilot ?? {}) },
-      crew: { ...(ssDeploy?.crew ?? {}), items: Array.from((ssDeploy?.crew ?? {}).items ?? []) },
-      passenger: { ...(ssDeploy?.passenger ?? {}), items: Array.from((ssDeploy?.passenger ?? {}).items ?? []) },
+      pilot: {
+        ...(ssDeploy?.pilot ?? {}),
+        items: ssDeploy?.pilot?.value ? [toDisplayActor(ssDeploy.pilot.value)] : []
+      },
+      crew: {
+        ...(ssDeploy?.crew ?? {}),
+        items: Array.from((ssDeploy?.crew ?? {}).items ?? []).map(toDisplayActor)
+      },
+      passenger: {
+        ...(ssDeploy?.passenger ?? {}),
+        items: Array.from((ssDeploy?.passenger ?? {}).items ?? []).map(toDisplayActor)
+      },
       active: { ...(ssDeploy?.active ?? {}) }
     };
 
