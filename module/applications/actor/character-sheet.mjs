@@ -40,15 +40,30 @@ export default class ActorSheet5eCharacter extends ActorSheet5e {
     const context = await super.getData(options);
 
     // Resources
-    context.resources = ["primary", "secondary", "tertiary"].reduce((arr, r) => {
+    const baseResources = ["primary", "secondary", "tertiary"].reduce((arr, r) => {
       const res = foundry.utils.mergeObject(context.actor.system.resources[r] || {}, {
-        name: r,
-        placeholder: game.i18n.localize(`SW5E.Resource${r.titleCase()}`)
+        keyPath: `system.resources.${r}`,
+        placeholder: game.i18n.localize(`SW5E.Resource${r.titleCase()}`),
+        isAdditional: false
       }, {inplace: false});
       if ( res.value === 0 ) delete res.value;
       if ( res.max === 0 ) delete res.max;
       return arr.concat([res]);
     }, []);
+
+    const additionalResources = (context.system.additionalResources ?? []).map((resource, index) => {
+      const res = foundry.utils.mergeObject(resource, {
+        keyPath: `system.additionalResources.${index}`,
+        placeholder: game.i18n.localize("SW5E.Resource"),
+        isAdditional: true,
+        index
+      }, { inplace: false });
+      if ( res.value === 0 ) delete res.value;
+      if ( res.max === 0 ) delete res.max;
+      return res;
+    });
+
+    context.resources = [...baseResources, ...additionalResources];
 
     // HTML enrichment
     for (const field of [
@@ -229,6 +244,8 @@ export default class ActorSheet5eCharacter extends ActorSheet5e {
     html$.find(".short-rest").click(this._onShortRest.bind(this));
     html$.find(".long-rest").click(this._onLongRest.bind(this));
     html$.find(".rollable[data-action]").click(this._onSheetAction.bind(this));
+    html$.find(".resource-control[data-action='add']").click(this._onAddResource.bind(this));
+    html$.find(".resource-control[data-action='remove']").click(this._onRemoveResource.bind(this));
 
     // Send Languages to Chat onClick
     html$.find('[data-options="share-languages"]').click(event => {
@@ -407,6 +424,41 @@ export default class ActorSheet5eCharacter extends ActorSheet5e {
     event.preventDefault();
     await this._onSubmit(event);
     return this.actor.longRest();
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Add an additional custom resource row to the character sheet.
+   * @param {MouseEvent} event
+   * @returns {Promise<Actor5e>}
+   * @private
+   */
+  async _onAddResource(event) {
+    event.preventDefault();
+    await this._onSubmit(event);
+    const additionalResources = foundry.utils.deepClone(this.actor.system.additionalResources ?? []);
+    additionalResources.push({ label: "", value: 0, max: 0, sr: false, lr: false });
+    return this.actor.update({ "system.additionalResources": additionalResources });
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Remove an additional custom resource row from the character sheet.
+   * @param {MouseEvent} event
+   * @returns {Promise<Actor5e|null>}
+   * @private
+   */
+  async _onRemoveResource(event) {
+    event.preventDefault();
+    const index = Number(event.currentTarget.dataset.index);
+    if ( !Number.isInteger(index) || index < 0 ) return null;
+    await this._onSubmit(event);
+    const additionalResources = foundry.utils.deepClone(this.actor.system.additionalResources ?? []);
+    if ( index >= additionalResources.length ) return null;
+    additionalResources.splice(index, 1);
+    return this.actor.update({ "system.additionalResources": additionalResources });
   }
 
   /* -------------------------------------------- */
