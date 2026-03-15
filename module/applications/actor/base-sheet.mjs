@@ -1048,8 +1048,7 @@ export default class ActorSheet5e extends ActorSheetMixin(ActorSheet) {
   _onConfigMenu(event) {
     event.preventDefault();
     event.stopPropagation();
-    const button = event.currentTarget?.dataset?.action ? event.currentTarget : event.target?.closest?.(".config-button");
-    if (!button) return;
+    const button = event.currentTarget;
 
     const getMovementPath = () => {
       const move = this.actor.system.attributes?.movement ?? {};
@@ -1061,7 +1060,7 @@ export default class ActorSheet5e extends ActorSheetMixin(ActorSheet) {
     const manualConfig = (() => {
       switch (button.dataset.action) {
         case "ability": {
-          const ability = button.closest("[data-ability]")?.dataset?.ability;
+          const ability = event.currentTarget.closest("[data-ability]")?.dataset?.ability;
           if (!ability) return null;
           return new ManualListConfig(this.actor, {
             listId: `ability-${ability}`,
@@ -1071,7 +1070,7 @@ export default class ActorSheet5e extends ActorSheetMixin(ActorSheet) {
           });
         }
         case "skill": {
-          const skill = button.closest("[data-key]")?.dataset?.key;
+          const skill = event.currentTarget.closest("[data-key]")?.dataset?.key;
           if (!skill) return null;
           return new ManualListConfig(this.actor, {
             listId: `skill-${skill}`,
@@ -1083,7 +1082,7 @@ export default class ActorSheet5e extends ActorSheetMixin(ActorSheet) {
           });
         }
         case "tool": {
-          const tool = button.closest("[data-key]")?.dataset?.key;
+          const tool = event.currentTarget.closest("[data-key]")?.dataset?.key;
           if (!tool) return null;
           return new ManualListConfig(this.actor, {
             listId: `tool-${tool}`,

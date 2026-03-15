@@ -3,16 +3,24 @@
  * @extends {FormApplication}
  * @abstract
  */
-import { LegacyFormApplication, LegacyDocumentSheet } from "../application-v2-compat.mjs";
+import {LegacyFormApplication} from "../application-v2-compat.mjs";
 
-const BaseConfigApplication = LegacyFormApplication ?? LegacyDocumentSheet ?? globalThis.FormApplication;
-
-export default class BaseConfigSheet extends BaseConfigApplication {
+export default class BaseConfigSheet extends LegacyDocumentSheet {
   constructor(document, options = {}) {
-    super(document, options);
-    this.document = this.document ?? document;
-    this.object = this.object ?? document;
-    this._overrideInputChangeHandler = this._onOverrideInputChange.bind(this);
+    const isV2SheetClass = (LegacyDocumentSheet?.name ?? "").includes("DocumentSheetV2")
+      || (LegacyDocumentSheet?.name ?? "").includes("ApplicationV2");
+
+    if (isV2SheetClass) {
+      super(foundry.utils.mergeObject(options, { document }));
+    } else {
+      super(document, options);
+    }
+  }
+
+  /** @inheritdoc */
+  async _onFirstRender(options) {
+    await super._onFirstRender(options);
+    this._overrideInputChangeHandler ??= this._onOverrideInputChange.bind(this);
   }
 
   /** @inheritdoc */
