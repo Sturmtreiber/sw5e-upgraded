@@ -11,7 +11,7 @@ export default class ActorCastPointsConfig extends BaseConfigSheet {
      * Cloned copy of the actor for previewing changes.
      * @type {Actor5e}
      */
-    this.clone = this.object.clone();
+    this.clone = this.document.clone();
 
     /**
      * Type of casting this form represents.
@@ -77,7 +77,7 @@ export default class ActorCastPointsConfig extends BaseConfigSheet {
 
   /** @inheritdoc */
   _getActorOverrides() {
-    return Object.keys(foundry.utils.flattenObject(this.object.overrides?.system?.attributes || {}));
+    return Object.keys(foundry.utils.flattenObject(this.document?.overrides?.system?.attributes || this.object?.overrides?.system?.attributes || {}));
   }
 
   /* -------------------------------------------- */
