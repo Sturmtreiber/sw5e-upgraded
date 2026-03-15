@@ -64,7 +64,7 @@ export default class ActorArmorConfig extends BaseConfigSheet {
 
   /** @inheritdoc */
   _getActorOverrides() {
-    return Object.keys(foundry.utils.flattenObject(this.object.overrides?.system?.attributes || {}));
+    return Object.keys(foundry.utils.flattenObject(this.document?.overrides?.system?.attributes || this.object?.overrides?.system?.attributes || {}));
   }
 
   /* -------------------------------------------- */

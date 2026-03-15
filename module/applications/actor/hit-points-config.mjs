@@ -11,7 +11,7 @@ export default class ActorHitPointsConfig extends BaseConfigSheet {
      * Cloned copy of the actor for previewing changes.
      * @type {Actor5e}
      */
-    this.clone = this.object.clone();
+    this.clone = this.document.clone();
 
     /**
      * Which hit point type is this, hit-points, hull-points or shield-points.
@@ -75,7 +75,7 @@ export default class ActorHitPointsConfig extends BaseConfigSheet {
 
   /** @inheritdoc */
   _getActorOverrides() {
-    return Object.keys(foundry.utils.flattenObject(this.object.overrides?.system?.attributes || {}));
+    return Object.keys(foundry.utils.flattenObject(this.document?.overrides?.system?.attributes || this.object?.overrides?.system?.attributes || {}));
   }
 
   /* -------------------------------------------- */
