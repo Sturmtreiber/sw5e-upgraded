@@ -28,14 +28,14 @@ export default class ActorTypeConfig extends LegacyDocumentSheet {
 
   /** @inheritdoc */
   get title() {
-    return `${game.i18n.localize("SW5E.CreatureTypeTitle")}: ${this.object.name}`;
+    return `${game.i18n.localize("SW5E.CreatureTypeTitle")}: ${this.document.name}`;
   }
 
   /* -------------------------------------------- */
 
   /** @override */
   get id() {
-    return `actor-type-${this.object.id}`;
+    return `actor-type-${this.document.id}`;
   }
 
   /* -------------------------------------------- */
@@ -46,7 +46,7 @@ export default class ActorTypeConfig extends LegacyDocumentSheet {
    * @returns {Actor5e}
    */
   get actor() {
-    return this.object.actor ?? this.object;
+    return this.document.actor ?? this.document;
   }
 
   /* -------------------------------------------- */
@@ -54,7 +54,7 @@ export default class ActorTypeConfig extends LegacyDocumentSheet {
   /** @override */
   getData(options = {}) {
     // Get current value or new default
-    let attr = foundry.utils.getProperty(this.object, this.options.keyPath);
+    let attr = foundry.utils.getProperty(this.document, this.options.keyPath);
     if (foundry.utils.getType(attr) !== "Object") attr = {
       value: attr in CONFIG.SW5E.creatureTypes ? attr : "humanoid",
       showCustom: Object.hasOwn(attr, "custom"),
@@ -98,7 +98,7 @@ export default class ActorTypeConfig extends LegacyDocumentSheet {
   /** @override */
   async _updateObject(event, formData) {
     const typeObject = foundry.utils.expandObject(formData);
-    return this.object.update({[this.options.keyPath]: typeObject});
+    return this.document.update({[this.options.keyPath]: typeObject});
   }
 
   /* -------------------------------------------- */
