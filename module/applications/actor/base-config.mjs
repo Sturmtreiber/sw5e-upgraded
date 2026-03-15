@@ -6,6 +6,17 @@
 import {LegacyDocumentSheet} from "../application-v2-compat.mjs";
 
 export default class BaseConfigSheet extends LegacyDocumentSheet {
+  constructor(document, options = {}) {
+    const isV2SheetClass = (LegacyDocumentSheet?.name ?? "").includes("DocumentSheetV2")
+      || (LegacyDocumentSheet?.name ?? "").includes("ApplicationV2");
+
+    if (isV2SheetClass) {
+      super(foundry.utils.mergeObject(options, { document }));
+    } else {
+      super(document, options);
+    }
+  }
+
   /** @inheritdoc */
   async _onFirstRender(options) {
     await super._onFirstRender(options);
@@ -36,7 +47,7 @@ export default class BaseConfigSheet extends LegacyDocumentSheet {
    * @protected
    */
   _getActorOverrides() {
-    return Object.keys(foundry.utils.flattenObject(this.object.overrides || {}));
+    return Object.keys(foundry.utils.flattenObject(this.document?.overrides || this.object?.overrides || {}));
   }
 
   /**

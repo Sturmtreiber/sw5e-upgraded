@@ -1403,11 +1403,10 @@ export default class Actor5e extends SystemDocumentMixin(Actor) {
       const roles = this.itemTypes.feat.filter(
         f => f.system.type.value === "starship" && f.system.type.subtype === "role"
       );
-      if (roles.length === 0) this._preparationWarnings.push({
-        message: game.i18n.localize("SW5E.WarnNoSSRole"),
-        type: "warning"
-      });
-      else if (roles.length > 1) this._preparationWarnings.push({
+      if (roles.length === 0) {
+        attr.movement.space = sizeData.baseSpaceSpeed ?? attr.movement.space ?? 0;
+        attr.movement.turn = sizeData.baseTurnSpeed ?? attr.movement.turn ?? 0;
+      } else if (roles.length > 1) this._preparationWarnings.push({
         message: game.i18n.localize("SW5E.WarnMultipleSSRole"),
         type: "warning"
       });
