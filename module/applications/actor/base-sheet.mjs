@@ -2,25 +2,14 @@ import ActiveEffect5e from "../../documents/active-effect.mjs";
 import * as Trait from "../../documents/actor/trait.mjs";
 import Item5e from "../../documents/item.mjs";
 
-import ActorAbilityConfig from "./ability-config.mjs";
 import ActorArmorConfig from "./armor-config.mjs";
-import ActorHitDiceConfig from "./hit-dice-config.mjs";
-import ActorHitPointsConfig from "./hit-points-config.mjs";
-import ActorCastPointsConfig from "./cast-points-config.mjs";
-import ActorInitiativeConfig from "./initiative-config.mjs";
-import ActorMovementConfig from "./movement-config.mjs";
-import ActorSensesConfig from "./senses-config.mjs";
-import ActorSheetFlags from "./sheet-flags.mjs";
-import ActorTypeConfig from "./type-config.mjs";
-import SourceConfig from "../source-config.mjs";
 
 import AdvancementConfirmationDialog from "../advancement/advancement-confirmation-dialog.mjs";
 import AdvancementManager from "../advancement/advancement-manager.mjs";
 
 import PropertyAttribution from "../property-attribution.mjs";
-import TraitSelector from "./trait-selector.mjs";
-import ProficiencyConfig from "./proficiency-config.mjs";
 import ToolSelector from "./tool-selector.mjs";
+import ManualListConfig from "./manual-list-config.mjs";
 import { simplifyBonus } from "../../utils.mjs";
 import { ActorSheetMixin } from "./sheet-mixin.mjs";
 
@@ -913,11 +902,13 @@ export default class ActorSheet5e extends ActorSheetMixin(ActorSheet) {
       // Toggle Tool Proficiency
       html$.find(".tool-proficiency").on("click contextmenu", event => this._onCycleProficiency(event, "tool"));
 
-      // Trait Selector
-      html$.find(".trait-selector").click(this._onTraitSelector.bind(this));
+      // Trait Selector (delegated so handlers survive dynamic tab/content updates)
+      html$.off("click.sw5e-sheet", ".trait-selector");
+      html$.on("click.sw5e-sheet", ".trait-selector", this._onTraitSelector.bind(this));
 
-      // Configure Special Flags
-      html$.find(".config-button").click(this._onConfigMenu.bind(this));
+      // Configure controls (delegated so handlers survive dynamic tab/content updates)
+      html$.off("click.sw5e-sheet", ".config-button");
+      html$.on("click.sw5e-sheet", ".config-button", this._onConfigMenu.bind(this));
 
       // Owned Item management
       html$.find(".item-create").click(this._onItemCreate.bind(this));
@@ -1057,57 +1048,147 @@ export default class ActorSheet5e extends ActorSheetMixin(ActorSheet) {
   _onConfigMenu(event) {
     event.preventDefault();
     event.stopPropagation();
-    const button = event.currentTarget;
-    let app;
-    switch (button.dataset.action) {
-      case "armor":
-        app = new ActorArmorConfig(this.actor);
-        break;
-      case "hit-dice":
-        app = new ActorHitDiceConfig(this.actor);
-        break;
-      case "hit-points":
-      case "hull-points":
-      case "shield-points":
-        app = new ActorHitPointsConfig(button.dataset.action, this.actor);
-        break;
-      case "force-points":
-      case "tech-points":
-      case "super-dice":
-        app = new ActorCastPointsConfig(button.dataset.action, this.actor);
-        break;
-      case "initiative":
-        app = new ActorInitiativeConfig(this.actor);
-        break;
-      case "movement":
-        app = new ActorMovementConfig(this.actor);
-        break;
-      case "flags":
-        app = new ActorSheetFlags(this.actor);
-        break;
-      case "senses":
-        app = new ActorSensesConfig(this.actor);
-        break;
-      case "source":
-        app = new SourceConfig(this.actor);
-        break;
-      case "type":
-        app = new ActorTypeConfig(this.actor);
-        break;
-      case "ability":
-        const ability = event.currentTarget.closest("[data-ability]").dataset.ability;
-        app = new ActorAbilityConfig(this.actor, null, ability);
-        break;
-      case "skill":
-        const skill = event.currentTarget.closest("[data-key]").dataset.key;
-        app = new ProficiencyConfig(this.actor, { property: "skills", key: skill });
-        break;
-      case "tool":
-        const tool = event.currentTarget.closest("[data-key]").dataset.key;
-        app = new ProficiencyConfig(this.actor, { property: "tools", key: tool });
-        break;
-    }
-    app?.render(true);
+    const button = event.currentTarget?.dataset?.action ? event.currentTarget : event.target?.closest?.(".config-button");
+    if (!button) return;
+
+    const getMovementPath = () => {
+      const move = this.actor.system.attributes?.movement ?? {};
+      const candidates = ["space", "walk", "land", "fly", "swim", "climb", "burrow", "turn"];
+      const key = candidates.find(k => move[k] !== undefined) ?? "walk";
+      return `system.attributes.movement.${key}`;
+    };
+
+    const manualConfig = (() => {
+      switch (button.dataset.action) {
+        case "ability": {
+          const ability = button.closest("[data-ability]")?.dataset?.ability;
+          if (!ability) return null;
+          return new ManualListConfig(this.actor, {
+            listId: `ability-${ability}`,
+            label: CONFIG.SW5E.abilities[ability]?.label ?? ability,
+            type: "number",
+            targetPath: `system.abilities.${ability}.value`
+          });
+        }
+        case "skill": {
+          const skill = button.closest("[data-key]")?.dataset?.key;
+          if (!skill) return null;
+          return new ManualListConfig(this.actor, {
+            listId: `skill-${skill}`,
+            label: this.actor.type === "starship"
+              ? (CONFIG.SW5E.starshipSkills[skill]?.label ?? skill)
+              : (CONFIG.SW5E.skills[skill]?.label ?? skill),
+            type: "number",
+            targetPath: `system.skills.${skill}.value`
+          });
+        }
+        case "tool": {
+          const tool = button.closest("[data-key]")?.dataset?.key;
+          if (!tool) return null;
+          return new ManualListConfig(this.actor, {
+            listId: `tool-${tool}`,
+            label: Trait.keyLabel(tool, { trait: "tool" }) ?? tool,
+            type: "number",
+            targetPath: `system.tools.${tool}.value`
+          });
+        }
+        case "armor":
+          return new ManualListConfig(this.actor, {
+            listId: "armor",
+            label: game.i18n.localize("SW5E.ArmorClass"),
+            type: "number",
+            targetPath: "system.attributes.ac.value"
+          });
+        case "hit-points":
+        case "hull-points":
+          return new ManualListConfig(this.actor, {
+            listId: button.dataset.action,
+            label: game.i18n.localize("SW5E.HitPoints"),
+            type: "number",
+            targetPath: "system.attributes.hp.max"
+          });
+        case "shield-points":
+          return new ManualListConfig(this.actor, {
+            listId: "shield-points",
+            label: game.i18n.localize("SW5E.ShieldPoints"),
+            type: "number",
+            targetPath: "system.attributes.hp.tempmax"
+          });
+        case "initiative":
+          return new ManualListConfig(this.actor, {
+            listId: "initiative",
+            label: game.i18n.localize("SW5E.Initiative"),
+            type: "number",
+            targetPath: "system.attributes.init.bonus"
+          });
+        case "movement":
+          return new ManualListConfig(this.actor, {
+            listId: "movement",
+            label: game.i18n.localize("SW5E.Movement"),
+            type: "number",
+            targetPath: getMovementPath()
+          });
+        case "force-points":
+          return new ManualListConfig(this.actor, {
+            listId: "force-points",
+            label: game.i18n.localize("SW5E.ForcePoints"),
+            type: "number",
+            targetPath: "system.attributes.force.points.max"
+          });
+        case "tech-points":
+          return new ManualListConfig(this.actor, {
+            listId: "tech-points",
+            label: game.i18n.localize("SW5E.TechPoints"),
+            type: "number",
+            targetPath: "system.attributes.tech.points.max"
+          });
+        case "super-dice":
+          return new ManualListConfig(this.actor, {
+            listId: "super-dice",
+            label: game.i18n.localize("SW5E.SuperiorityDice"),
+            type: "number",
+            targetPath: "system.attributes.super.dice.max"
+          });
+        case "senses":
+          return new ManualListConfig(this.actor, {
+            listId: "senses",
+            label: game.i18n.localize("SW5E.Senses"),
+            type: "string-list",
+            targetPath: "system.attributes.senses.special"
+          });
+
+        case "hit-dice":
+          return new ManualListConfig(this.actor, {
+            listId: "hit-dice",
+            label: game.i18n.localize("SW5E.HitDice"),
+            type: "number",
+            targetPath: "system.attributes.hd.value"
+          });
+        case "flags":
+          return new ManualListConfig(this.actor, {
+            listId: "flags",
+            label: game.i18n.localize("SW5E.SpecialTraits"),
+            type: "string-list",
+            targetPath: "flags.sw5e.manualSpecialTraits"
+          });
+        case "source":
+          return new ManualListConfig(this.actor, {
+            listId: "source",
+            label: game.i18n.localize("SW5E.Source"),
+            type: "string-list",
+            targetPath: "system.source.custom"
+          });
+        case "type":
+          return new ManualListConfig(this.actor, {
+            listId: "type",
+            label: game.i18n.localize("SW5E.CreatureType"),
+            type: "string-list",
+            targetPath: "system.details.type.custom"
+          });
+      }      return null;
+    })();
+
+    if (manualConfig) return manualConfig.render(true);
   }
 
   /* -------------------------------------------- */
@@ -1698,9 +1779,16 @@ export default class ActorSheet5e extends ActorSheetMixin(ActorSheet) {
    */
   _onTraitSelector(event) {
     event.preventDefault();
-    const trait = event.currentTarget.dataset.trait;
+    const target = event.currentTarget?.dataset?.trait ? event.currentTarget : event.target?.closest?.(".trait-selector");
+    const trait = target?.dataset?.trait;
+    if (!trait) return;
     if (trait === "tool") return new ToolSelector(this.actor, trait).render(true);
-    return new TraitSelector(this.actor, trait).render(true);
+    return new ManualListConfig(this.actor, {
+      listId: `trait-${trait}`,
+      label: Trait.traitLabel(trait),
+      type: "string-list",
+      targetPath: `${Trait.actorKeyPath(trait)}.value`
+    }).render(true);
   }
 
   /* -------------------------------------------- */

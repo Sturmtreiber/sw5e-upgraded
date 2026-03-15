@@ -1,23 +1,25 @@
 /**
  * An abstract class containing common functionality between actor sheet configuration apps.
- * @extends {DocumentSheetV2}
+ * @extends {FormApplication}
  * @abstract
  */
-import {LegacyDocumentSheet} from "../application-v2-compat.mjs";
+import {LegacyFormApplication} from "../application-v2-compat.mjs";
 
-export default class BaseConfigSheet extends LegacyDocumentSheet {
-  /** @inheritdoc */
-  async _onFirstRender(options) {
-    await super._onFirstRender(options);
-    this._overrideInputChangeHandler ??= this._onOverrideInputChange.bind(this);
+export default class BaseConfigSheet extends LegacyFormApplication {
+  constructor(document, options = {}) {
+    super(document, options);
+    this.document = this.document ?? document;
+    this.object = this.object ?? document;
+    this._overrideInputChangeHandler = this._onOverrideInputChange.bind(this);
   }
 
   /** @inheritdoc */
-  async _onRender(options) {
-    await super._onRender(options);
+  activateListeners(html) {
+    super.activateListeners(html);
     if (!this.isEditable) return;
-    const element = this.element instanceof HTMLElement ? this.element : this.element?.[0];
+    const element = html instanceof HTMLElement ? html : html?.[0];
     if (!element) return;
+
     if (this._overrideInputElement && this._overrideInputElement !== element) {
       this._overrideInputElement.removeEventListener("change", this._overrideInputChangeHandler);
     }
@@ -36,7 +38,7 @@ export default class BaseConfigSheet extends LegacyDocumentSheet {
    * @protected
    */
   _getActorOverrides() {
-    return Object.keys(foundry.utils.flattenObject(this.object.overrides || {}));
+    return Object.keys(foundry.utils.flattenObject(this.document?.overrides || this.object?.overrides || {}));
   }
 
   /**

@@ -18,7 +18,7 @@ export default class ActorHitDiceConfig extends BaseConfigSheet {
 
   /** @inheritDoc */
   get title() {
-    return `${game.i18n.localize("SW5E.HitDiceConfig")}: ${this.object.name}`;
+    return `${game.i18n.localize("SW5E.HitDiceConfig")}: ${this.document.name}`;
   }
 
   /* -------------------------------------------- */
@@ -26,7 +26,7 @@ export default class ActorHitDiceConfig extends BaseConfigSheet {
   /** @inheritDoc */
   getData(options) {
     return {
-      classes: this.object.items
+      classes: this.document.items
         .reduce((classes, item) => {
           if (item.type === "class") {
             classes.push({
@@ -66,12 +66,12 @@ export default class ActorHitDiceConfig extends BaseConfigSheet {
 
   /** @inheritDoc */
   async _updateObject(event, formData) {
-    const actorItems = this.object.items;
+    const actorItems = this.document.items;
     const classUpdates = Object.entries(formData).map(([id, hd]) => ({
       _id: id,
       "system.hitDiceUsed": actorItems.get(id).system.levels - hd
     }));
-    return this.object.updateEmbeddedDocuments("Item", classUpdates);
+    return this.document.updateEmbeddedDocuments("Item", classUpdates);
   }
 
   /* -------------------------------------------- */
@@ -84,7 +84,7 @@ export default class ActorHitDiceConfig extends BaseConfigSheet {
   async _onRollHitDie(event) {
     event.preventDefault();
     const button = event.currentTarget;
-    await this.object.rollHitDie(button.dataset.hdDenom);
+    await this.document.rollHitDie(button.dataset.hdDenom);
 
     // Re-render dialog to reflect changed hit dice quantities
     this.render();
