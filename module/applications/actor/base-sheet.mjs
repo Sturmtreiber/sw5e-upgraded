@@ -902,11 +902,13 @@ export default class ActorSheet5e extends ActorSheetMixin(ActorSheet) {
       // Toggle Tool Proficiency
       html$.find(".tool-proficiency").on("click contextmenu", event => this._onCycleProficiency(event, "tool"));
 
-      // Trait Selector
-      html$.find(".trait-selector").click(this._onTraitSelector.bind(this));
+      // Trait Selector (delegated so handlers survive dynamic tab/content updates)
+      html$.off("click.sw5e-sheet", ".trait-selector");
+      html$.on("click.sw5e-sheet", ".trait-selector", this._onTraitSelector.bind(this));
 
-      // Configure Special Flags
-      html$.find(".config-button").click(this._onConfigMenu.bind(this));
+      // Configure controls (delegated so handlers survive dynamic tab/content updates)
+      html$.off("click.sw5e-sheet", ".config-button");
+      html$.on("click.sw5e-sheet", ".config-button", this._onConfigMenu.bind(this));
 
       // Owned Item management
       html$.find(".item-create").click(this._onItemCreate.bind(this));
