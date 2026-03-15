@@ -23,13 +23,14 @@
                 </div>
                 <ol class="group-items item-list">
                     {{#each deployment.items as | deploy |}}
-                    <li class="item group-grid-deployments" data-key="{{key}}" data-uuid="{{deploy}}">
+                    <li class="item group-grid-deployments" data-key="{{key}}" data-uuid="{{deploy.uuid}}">
                         <div class="item-name">
-                            <h4>{{{ sw5e-linkForUuid deploy }}}</h4>
+                            <div class="item-image" tabindex="0" role="button" aria-label="{{deploy.name}}" style="background-image: url('{{deploy.img}}')"></div>
+                            <h4>{{deploy.name}}</h4>
                         </div>
                         <div class="item-detail item-weight">
                             {{#if (eq key "crew")}}
-                                {{#if (eq deploy @root.deployment.pilot.value)}}
+                                {{#if (eq deploy.uuid @root.deployment.pilot.value)}}
                                     <a class="deploy-control pilot" data-action="pilot-toggle">
                                         {{localize "SW5E.CrewStationTypePilot"}}
                                     </a>
@@ -46,7 +47,7 @@
                                     <a/>
                                 {{else}}
                                     <a class="deploy-control" data-action="toggle" data-tooltip="SW5E.DeployToggle">
-                                        <i class="fas {{#if (eq deploy @root.deployment.active.value)}}fa-check{{else}}fa-times{{/if}}"></i>
+                                        <i class="fas {{#if (eq deploy.uuid @root.deployment.active.value)}}fa-check{{else}}fa-times{{/if}}"></i>
                                     </a>
                                 {{/if}}
                                 <a class="deploy-control" data-action="delete" data-tooltip="SW5E.DeployDelete">
