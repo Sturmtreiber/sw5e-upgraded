@@ -1778,7 +1778,9 @@ export default class ActorSheet5e extends ActorSheetMixin(ActorSheet) {
    */
   _onTraitSelector(event) {
     event.preventDefault();
-    const trait = event.currentTarget.dataset.trait;
+    const target = event.currentTarget?.dataset?.trait ? event.currentTarget : event.target?.closest?.(".trait-selector");
+    const trait = target?.dataset?.trait;
+    if (!trait) return;
     if (trait === "tool") return new ToolSelector(this.actor, trait).render(true);
     return new ManualListConfig(this.actor, {
       listId: `trait-${trait}`,
