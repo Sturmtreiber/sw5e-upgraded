@@ -243,6 +243,8 @@ export default class ActorSheet5eVehicle extends ActorSheet5e {
     let totalWeight = 0;
     for (const item of context.items) {
       const ctx = (context.itemContext[item.id] ??= {});
+      this._prepareItemContext(item, ctx);
+      ctx.canToggle = false;
       this._prepareCrewedItem(item, ctx);
 
       // Handle cargo explicitly
