@@ -36,7 +36,7 @@ export default class BaseConfigSheet extends LegacyDocumentSheet {
    * @protected
    */
   _getActorOverrides() {
-    return Object.keys(foundry.utils.flattenObject(this.object.overrides || {}));
+    return Object.keys(foundry.utils.flattenObject(this.document?.overrides || this.object?.overrides || {}));
   }
 
   /**
