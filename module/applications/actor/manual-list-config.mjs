@@ -15,11 +15,19 @@ export default class ManualListConfig extends BaseConfigSheet {
   }
 
   get id() {
-    return `manual-list-${this.document.id}-${this.options.listId}`;
+    return `manual-list-${this.targetDocument?.id}-${this.options.listId}`;
   }
 
   get title() {
-    return `${this.options.label}: ${this.document.name}`;
+    return `${this.options.label}: ${this.targetDocument?.name ?? ""}`;
+  }
+
+  /**
+   * Compatibility getter for Foundry generations that expose either .document or .object.
+   * @returns {Document}
+   */
+  get targetDocument() {
+    return this.document ?? this.object;
   }
 
   _listFlagPath() {
@@ -27,16 +35,16 @@ export default class ManualListConfig extends BaseConfigSheet {
   }
 
   _getCurrentEntries() {
-    const existing = this.document.getFlag("sw5e", this._listFlagPath());
+    const existing = this.targetDocument.getFlag("sw5e", this._listFlagPath());
     if (Array.isArray(existing) && existing.length) return foundry.utils.deepClone(existing);
 
     if (this.options.type === "number") {
-      const value = Number(foundry.utils.getProperty(this.document, this.options.targetPath) ?? 0);
+      const value = Number(foundry.utils.getProperty(this.targetDocument, this.options.targetPath) ?? 0);
       return value ? [{ value, source: "Existing value", temporary: false }] : [];
     }
 
     if (this.options.type === "string-list") {
-      const values = foundry.utils.getProperty(this.document, this.options.targetPath);
+      const values = foundry.utils.getProperty(this.targetDocument, this.options.targetPath);
       if (values instanceof Set) {
         return Array.from(values).map(v => ({ value: v, source: "Existing value", temporary: false }));
       }
@@ -117,21 +125,21 @@ export default class ManualListConfig extends BaseConfigSheet {
       .map(r => ({ value: r.value, source: r.source || "", temporary: !!r.temporary }))
       .filter(r => `${r.value}`.trim() !== "");
 
-    await this.document.setFlag("sw5e", this._listFlagPath(), rows);
+    await this.targetDocument.setFlag("sw5e", this._listFlagPath(), rows);
 
     if (this.options.type === "number") {
       const total = rows.reduce((acc, e) => acc + Number(e.value || 0), 0);
-      await this.document.update({ [this.options.targetPath]: total });
+      await this.targetDocument.update({ [this.options.targetPath]: total });
       return;
     }
 
     if (this.options.type === "string-list") {
       const values = Array.from(new Set(rows.map(r => `${r.value}`.trim()).filter(Boolean)));
-      const current = foundry.utils.getProperty(this.document, this.options.targetPath);
+      const current = foundry.utils.getProperty(this.targetDocument, this.options.targetPath);
       if (typeof current === "string") {
-        await this.document.update({ [this.options.targetPath]: values.join("; ") });
+        await this.targetDocument.update({ [this.options.targetPath]: values.join("; ") });
       } else {
-        await this.document.update({ [this.options.targetPath]: values });
+        await this.targetDocument.update({ [this.options.targetPath]: values });
       }
     }
   }
