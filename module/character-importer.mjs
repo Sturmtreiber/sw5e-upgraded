@@ -11,6 +11,31 @@ export default class CharacterImporter {
   async transform(rawCharacter) {
     const sourceCharacter = JSON.parse(rawCharacter); // Source character
 
+    // SW5E export payloads can arrive under a few shapes.
+    // Prefer arrays first, then support object maps by converting to [{name, current}].
+    const candidateAttribs = sourceCharacter.attribs
+      ?? sourceCharacter.attributes
+      ?? sourceCharacter.attrs
+      ?? sourceCharacter.character?.attribs
+      ?? sourceCharacter.character?.attributes
+      ?? sourceCharacter.character?.attrs;
+
+    let attribs = [];
+    if ( Array.isArray(candidateAttribs) ) attribs = candidateAttribs;
+    else if ( candidateAttribs && (typeof candidateAttribs === "object") ) {
+      attribs = Object.entries(candidateAttribs).map(([name, value]) => ({
+        name,
+        current: (value && typeof value === "object" && ("current" in value)) ? value.current : value
+      }));
+    }
+
+    if ( !attribs.length ) {
+      throw new Error("Invalid SW5E import payload: missing character attributes");
+    }
+
+    // Normalize so legacy importer logic remains compatible.
+    sourceCharacter.attribs = attribs;
+
     const avatar = sourceCharacter.avatar?.trim?.() ? sourceCharacter.avatar.trim() : "icons/svg/mystery-man.svg";
 
     const details = {
@@ -457,11 +482,17 @@ export default class CharacterImporter {
           Import: {
             icon: "<i class=\"fas fa-file-import\"></i>",
             label: "Import Character",
-            callback: () => {
-              let characterData = $("#character-json").val();
+            callback: async () => {
+              const characterData = $("#character-json").val();
               console.log("Parsing Character JSON");
               const ci = new CharacterImporter();
-              ci.transform(characterData);
+              try {
+                await ci.transform(characterData);
+              } catch (error) {
+                console.error("Character import failed", error);
+                const message = error?.message || "Invalid character JSON. Please verify the exported data and try again.";
+                ui.notifications.error(message);
+              }
             }
           },
           Cancel: {

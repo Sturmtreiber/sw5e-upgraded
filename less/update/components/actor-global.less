@@ -952,6 +952,7 @@
               h1 {
                 border: none;
                 margin: 0;
+                position: relative;
 
                 input {
                   font-family: "Russo One";
@@ -960,6 +961,14 @@
                   text-align: center;
                   margin-bottom: 4px;
                   border-radius: 0;
+                }
+
+                .resource-control[data-action="remove"] {
+                  position: absolute;
+                  right: 4px;
+                  top: 50%;
+                  transform: translateY(-50%);
+                  font-size: 12px;
                 }
               }
 
@@ -1005,6 +1014,15 @@
                   grid-template-columns: 1fr 1fr;
                 }
               }
+            }
+          }
+
+          .resource-controls {
+            margin-top: 8px;
+
+            .resource-control[data-action="add"] {
+              width: 100%;
+              justify-content: center;
             }
           }
 
