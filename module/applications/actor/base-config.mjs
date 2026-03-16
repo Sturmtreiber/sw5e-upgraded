@@ -1,9 +1,9 @@
 /**
  * An abstract class containing common functionality between actor sheet configuration apps.
- * @extends {FormApplication}
+ * @extends {DocumentSheetV2}
  * @abstract
  */
-import {LegacyFormApplication} from "../application-v2-compat.mjs";
+import {LegacyDocumentSheet} from "../application-v2-compat.mjs";
 
 export default class BaseConfigSheet extends LegacyDocumentSheet {
   constructor(document, options = {}) {
@@ -24,12 +24,11 @@ export default class BaseConfigSheet extends LegacyDocumentSheet {
   }
 
   /** @inheritdoc */
-  activateListeners(html) {
-    super.activateListeners(html);
+  async _onRender(options) {
+    await super._onRender(options);
     if (!this.isEditable) return;
-    const element = html instanceof HTMLElement ? html : html?.[0];
+    const element = this.element instanceof HTMLElement ? this.element : this.element?.[0];
     if (!element) return;
-
     if (this._overrideInputElement && this._overrideInputElement !== element) {
       this._overrideInputElement.removeEventListener("change", this._overrideInputChangeHandler);
     }
