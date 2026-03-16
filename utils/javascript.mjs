@@ -9,7 +9,9 @@ import nodeResolve from "@rollup/plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
 import terser from "@rollup/plugin-terser";
 
-import packageJSON from "../package.json" assert { type: "json" };
+import fs from "node:fs";
+
+const packageJSON = JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url), "utf8"));
 
 /**
  * Parsed arguments passed in through the command line.
