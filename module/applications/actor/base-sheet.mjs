@@ -135,6 +135,7 @@ export default class ActorSheet5e extends ActorSheetMixin(ActorSheet) {
       isStarship: this.actor.type === "starship",
       isVehicle: this.actor.type === "vehicle",
       config: CONFIG.SW5E,
+      actorSizeOptions: Object.entries(CONFIG.SW5E.actorSizes).map(([value, label]) => ({ value, label })),
       rollableClass: this.isEditable ? "rollable" : "",
       rollData: this.actor.getRollData(),
       overrides: {
