@@ -10,12 +10,10 @@
                     value="{{res.label}}"
                     placeholder="{{res.placeholder}}"
                 />
-                {{#if ../isCharacter}}
                 {{#if res.isAdditional}}
                 <a class="resource-control" data-action="remove" data-index="{{res.index}}" data-tooltip="Delete">
                     <i class="fas fa-trash"></i>
                 </a>
-                {{/if}}
                 {{/if}}
             </h1>
             <div class="attribute-value">
@@ -36,13 +34,11 @@
         </div>
         {{/each}}
     </section>
-    {{#if isCharacter}}
     <div class="resource-controls">
         <button type="button" class="resource-control" data-action="add">
             <i class="fas fa-plus"></i> {{ localize "SW5E.Add" }}
         </button>
     </div>
-    {{/if}}
     <section class="counters">
 
         <div class="counter">

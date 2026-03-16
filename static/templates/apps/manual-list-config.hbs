@@ -1,0 +1,48 @@
+<form autocomplete="off">
+  <header class="sheet-header" style="margin-bottom:8px;">
+    <h3>[ {{total}} ] {{label}}</h3>
+  </header>
+
+  <div class="form-group" style="margin-bottom:8px;">
+    <button type="button" class="manual-add-row"><i class="fas fa-plus"></i> Add</button>
+  </div>
+
+  <table style="width:100%;">
+    <thead>
+      <tr>
+        <th>Value</th>
+        <th>Source</th>
+        <th>Temporary</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each entries as |entry idx|}}
+      <tr>
+        <td>
+          {{#if (eq @root.type "number")}}
+            <button type="button" class="manual-dec" data-index="{{idx}}">-</button>
+            <input type="text" name="entries.{{idx}}.value" value="{{entry.value}}" data-dtype="Number" style="width:70px; text-align:center;" />
+            <button type="button" class="manual-inc" data-index="{{idx}}">+</button>
+          {{else}}
+            <input type="text" name="entries.{{idx}}.value" value="{{entry.value}}" />
+          {{/if}}
+        </td>
+        <td>
+          <input type="text" name="entries.{{idx}}.source" value="{{entry.source}}" />
+        </td>
+        <td style="text-align:center;">
+          <input type="checkbox" name="entries.{{idx}}.temporary" {{checked entry.temporary}} />
+        </td>
+        <td>
+          <button type="button" class="manual-delete-row" data-index="{{idx}}"><i class="fas fa-trash"></i></button>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <footer class="sheet-footer flexrow" style="margin-top:10px;">
+    <button type="submit"><i class="fas fa-save"></i> Save and Close</button>
+  </footer>
+</form>
