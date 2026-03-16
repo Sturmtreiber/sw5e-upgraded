@@ -64,6 +64,7 @@ export default class ActorSheet5eCharacter extends ActorSheet5e {
     });
 
     context.resources = [...baseResources, ...additionalResources];
+    context.hasCustomResourceControls = true;
 
     // HTML enrichment
     for (const field of [
