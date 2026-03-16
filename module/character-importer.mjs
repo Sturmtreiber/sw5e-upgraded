@@ -11,6 +11,26 @@ export default class CharacterImporter {
   async transform(rawCharacter) {
     const sourceCharacter = JSON.parse(rawCharacter); // Source character
 
+    // SW5E export payloads can arrive under a few shapes.
+    // Prefer arrays first, then support object maps by converting to [{name, current}].
+    const candidateAttribs = sourceCharacter.attribs
+      ?? sourceCharacter.attributes
+      ?? sourceCharacter.attrs
+      ?? sourceCharacter.character?.attribs
+      ?? sourceCharacter.character?.attributes
+      ?? sourceCharacter.character?.attrs;
+
+    let attribs = [];
+    if ( Array.isArray(candidateAttribs) ) attribs = candidateAttribs;
+    else if ( candidateAttribs && (typeof candidateAttribs === "object") ) {
+      attribs = Object.entries(candidateAttribs).map(([name, value]) => ({
+        name,
+        current: (value && typeof value === "object" && ("current" in value)) ? value.current : value
+      }));
+    }
+
+    if ( !attribs.length ) {
+      throw new Error("Invalid SW5E import payload: missing character attributes");
     // SW5E export payloads have historically used "attribs", but some sources provide "attributes".
     const attribs = Array.isArray(sourceCharacter.attribs)
       ? sourceCharacter.attribs
