@@ -10,6 +10,7 @@ import commonjs from "rollup-plugin-commonjs";
 import terser from "@rollup/plugin-terser";
 
 import fs from "node:fs";
+import path from "node:path";
 
 const packageJSON = JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url), "utf8"));
 
@@ -28,6 +29,20 @@ const JAVSCRIPT_DEST = "./dist";
 const JAVASCRIPT_WATCH = ["module/**/*.mjs", "sw5e.mjs"];
 
 
+function rollupJsonPlugin() {
+  return {
+    name: "sw5e-json",
+    transform(code, id) {
+      if ( path.extname(id) !== ".json" ) return null;
+      const parsed = JSON.parse(code);
+      return {
+        code: `export default ${JSON.stringify(parsed)};`,
+        map: { mappings: "" }
+      };
+    }
+  };
+}
+
 /**
  * Compile javascript source files into a single output file.
  *
@@ -37,6 +52,7 @@ async function compileJavascript() {
   const config = {
     input: "./sw5e.mjs",
     plugins: [
+      rollupJsonPlugin(),
       nodeResolve(),
       commonjs()
     ]
