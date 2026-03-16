@@ -11,6 +11,20 @@ export default class CharacterImporter {
   async transform(rawCharacter) {
     const sourceCharacter = JSON.parse(rawCharacter); // Source character
 
+    // SW5E export payloads have historically used "attribs", but some sources provide "attributes".
+    const attribs = Array.isArray(sourceCharacter.attribs)
+      ? sourceCharacter.attribs
+      : Array.isArray(sourceCharacter.attributes)
+        ? sourceCharacter.attributes
+        : [];
+
+    if ( !attribs.length ) {
+      throw new Error("Invalid SW5E import payload: missing attribs/attributes array");
+    }
+
+    // Normalize so legacy importer logic remains compatible.
+    sourceCharacter.attribs = attribs;
+
     const avatar = sourceCharacter.avatar?.trim?.() ? sourceCharacter.avatar.trim() : "icons/svg/mystery-man.svg";
 
     const details = {
@@ -457,11 +471,17 @@ export default class CharacterImporter {
           Import: {
             icon: "<i class=\"fas fa-file-import\"></i>",
             label: "Import Character",
-            callback: () => {
-              let characterData = $("#character-json").val();
+            callback: async () => {
+              const characterData = $("#character-json").val();
               console.log("Parsing Character JSON");
               const ci = new CharacterImporter();
-              ci.transform(characterData);
+              try {
+                await ci.transform(characterData);
+              } catch (error) {
+                console.error("Character import failed", error);
+                const message = error?.message || "Invalid character JSON. Please verify the exported data and try again.";
+                ui.notifications.error(message);
+              }
             }
           },
           Cancel: {
