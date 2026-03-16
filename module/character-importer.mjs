@@ -31,6 +31,15 @@ export default class CharacterImporter {
 
     if ( !attribs.length ) {
       throw new Error("Invalid SW5E import payload: missing character attributes");
+    // SW5E export payloads have historically used "attribs", but some sources provide "attributes".
+    const attribs = Array.isArray(sourceCharacter.attribs)
+      ? sourceCharacter.attribs
+      : Array.isArray(sourceCharacter.attributes)
+        ? sourceCharacter.attributes
+        : [];
+
+    if ( !attribs.length ) {
+      throw new Error("Invalid SW5E import payload: missing attribs/attributes array");
     }
 
     // Normalize so legacy importer logic remains compatible.
