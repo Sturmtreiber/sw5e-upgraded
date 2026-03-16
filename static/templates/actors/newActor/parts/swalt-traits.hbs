@@ -84,6 +84,7 @@
             {{localize "SW5E.Size"}}
             <select class="actor-size" name="system.traits.size">
                 {{selectOptions actorSizeOptions selected=system.traits.size labelAttr="label" valueAttr="value" localize=true}}
+                {{selectOptions config.actorSizes selected=system.traits.size}}
             </select>
         </label>
 
