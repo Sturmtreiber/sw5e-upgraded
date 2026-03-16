@@ -3914,6 +3914,12 @@ export default class Actor5e extends SystemDocumentMixin(Actor) {
         updates[`system.resources.${k}.value`] = Number(r.max);
       }
     }
+    for (const [index, resource] of (this.system.additionalResources ?? []).entries()) {
+      if (Number.isNumeric(resource.max)
+        && ((recoverShortRestResources && resource.sr) || (recoverLongRestResources && resource.lr))) {
+        updates[`system.additionalResources.${index}.value`] = Number(resource.max);
+      }
+    }
     return updates;
   }
 
@@ -4769,6 +4775,7 @@ export default class Actor5e extends SystemDocumentMixin(Actor) {
 
     // Specifically delete some data attributes
     delete d.system.resources; // Don't change your resource pools
+    delete d.system.additionalResources; // Don't change your custom resource pools
     delete d.system.currency; // Don't lose currency
     delete d.system.bonuses; // Don't lose global bonuses
     if ( keepPowers ) delete d.system.attributes.powercasting; // Keep powercasting ability if retaining powers.

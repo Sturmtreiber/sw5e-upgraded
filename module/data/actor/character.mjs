@@ -48,6 +48,7 @@ import TraitsFields from "./templates/traits.mjs";
  * @property {CharacterResourceData} resources.primary    Resource number one.
  * @property {CharacterResourceData} resources.secondary  Resource number two.
  * @property {CharacterResourceData} resources.tertiary   Resource number three.
+ * @property {ResourceData[]} additionalResources         Additional custom resources.
  */
 export default class CharacterData extends CreatureTemplate {
   /** @inheritdoc */
@@ -201,6 +202,10 @@ export default class CharacterData extends CreatureTemplate {
           secondary: makeResourceField({ label: "SW5E.ResourceSecondary" }),
           tertiary: makeResourceField({ label: "SW5E.ResourceTertiary" })
         },
+        { label: "SW5E.Resources" }
+      ),
+      additionalResources: new foundry.data.fields.ArrayField(
+        makeResourceField({ label: "SW5E.Resource" }),
         { label: "SW5E.Resources" }
       )
     });
